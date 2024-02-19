@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages
 import os 
+from setuptools import setup, find_packages
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 requirements = open(os.path.join(cwd, "requirements.txt"), "r").readlines()
