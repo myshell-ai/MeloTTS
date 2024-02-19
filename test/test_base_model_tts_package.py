@@ -1,4 +1,4 @@
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 import os
 import glob
 import sys

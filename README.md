@@ -4,7 +4,7 @@
 </div>
 
 ## Introduction
-MyShellTTSBase is a high-quality multi-lingual text-to-speech library. Example languages include:
+MeloTTS is a high-quality multi-lingual text-to-speech library. Example languages include:
 
 | Language | Example |
 | --- | --- |
@@ -23,16 +23,17 @@ The Chinese speaker supports `mixed Chinese and English`.
 
 ## Install
 ```bash
-git clone git@github.com:myshell-ai/MyShellTTSBase.git
-cd MyShellTTSBase
-python setup.py install
+git clone git@github.com:myshell-ai/MeloTTS.git
+cd MeloTTS
+pip install -e .
+python -m unidic download
 ```
 
 ## Usage
 
 ### English with Multi Accents
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0
@@ -66,7 +67,7 @@ model.tts_to_file(text, speaker_ids['EN-AU'], output_path, speed=speed)
 
 ### Spanish
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0
@@ -80,7 +81,7 @@ model.tts_to_file(text, speaker_ids['ES'], output_path, speed=speed)
 
 ### French
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0
@@ -94,7 +95,7 @@ model.tts_to_file(text, speaker_ids['FR'], output_path, speed=speed)
 
 ### Chinese
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0
@@ -108,7 +109,7 @@ model.tts_to_file(text, speaker_ids['ZH'], output_path, speed=speed)
 
 ### Japanese
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0
@@ -122,7 +123,7 @@ model.tts_to_file(text, speaker_ids['JP'], output_path, speed=speed)
 
 ### Korean
 ```python
-from MyShellTTSBase.api import TTS
+from melo.api import TTS
 
 # Speed is adjustable
 speed = 1.0

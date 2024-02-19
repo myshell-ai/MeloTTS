@@ -20,16 +20,12 @@ class PostDevelopCommand(develop):
         os.system('python -m unidic download')
 
 setup(
-    name='MyShellTTSBase',
+    name='melo',
     version='0.1.0',
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
     package_data={
         '': ['*.txt', 'cmudict_*'],
-    },
-    cmdclass={
-        'develop': PostDevelopCommand,
-        'install': PostInstallCommand,
     },
 )
