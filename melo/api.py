@@ -7,6 +7,7 @@ import soundfile
 import torchaudio
 import numpy as np
 import torch.nn as nn
+from tqdm import tqdm
 
 from . import utils
 from . import commons
@@ -71,11 +72,20 @@ class TTS(nn.Module):
             print(" > ===========================")
         return texts
 
-    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, quiet=False, format=None):
+    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, format=None, position=None, quiet=False,):
         language = self.language
         texts = self.split_sentences_into_pieces(text, language, quiet)
         audio_list = []
-        for t in texts:
+        if pbar:
+            tx = pbar(texts)
+        else:
+            if position:
+                tx = tqdm(texts, position=position)
+            elif quiet:
+                tx = texts
+            else:
+                tx = tqdm(texts)
+        for t in tx:
             if language in ['EN', 'ZH_MIX_EN']:
                 t = re.sub(r'([a-z])([A-Z])', r'\1 \2', t)
             device = self.device
