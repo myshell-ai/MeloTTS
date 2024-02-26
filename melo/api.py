@@ -65,7 +65,7 @@ class TTS(nn.Module):
     @staticmethod
     def split_sentences_into_pieces(text, language):
         texts = split_sentence(text, language_str=language)
-        print(" > Text splitted to sentences.")
+        print(" > Text split to sentences.")
         print('\n'.join(texts))
         print(" > ===========================")
         return texts
