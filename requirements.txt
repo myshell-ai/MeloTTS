@@ -1,3 +1,4 @@
+txtsplit
 torch<2.0
 torchaudio
 transformers==4.27.4
