@@ -63,16 +63,17 @@ class TTS(nn.Module):
         return audio_segments
 
     @staticmethod
-    def split_sentences_into_pieces(text, language):
+    def split_sentences_into_pieces(text, language, quiet=False):
         texts = split_sentence(text, language_str=language)
-        print(" > Text split to sentences.")
-        print('\n'.join(texts))
-        print(" > ===========================")
+        if not quiet:
+            print(" > Text split to sentences.")
+            print('\n'.join(texts))
+            print(" > ===========================")
         return texts
 
-    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0):
+    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, quiet=False, format=None):
         language = self.language
-        texts = self.split_sentences_into_pieces(text, language)
+        texts = self.split_sentences_into_pieces(text, language, quiet)
         audio_list = []
         for t in texts:
             if language in ['EN', 'ZH_MIX_EN']:
@@ -110,4 +111,7 @@ class TTS(nn.Module):
         if output_path is None:
             return audio
         else:
-            soundfile.write(output_path, audio, self.hps.data.sampling_rate)
+            if format:
+                soundfile.write(output_path, audio, self.hps.data.sampling_rate, format=format)
+            else:
+                soundfile.write(output_path, audio, self.hps.data.sampling_rate)
