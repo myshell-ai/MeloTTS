@@ -99,7 +99,7 @@ melo --help
 
 ### Python API
 
-#### English with Multi Accents
+#### English with Multiple Accents
 
 ```python
 from melo.api import TTS
