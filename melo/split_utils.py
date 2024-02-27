@@ -4,7 +4,7 @@ import glob
 import numpy as np
 import soundfile as sf
 import torchaudio
-
+from txtsplit import txtsplit
 def split_sentence(text, min_len=10, language_str='EN'):
     if language_str in ['EN', 'FR', 'ES', 'SP', 'DE', 'RU']:
         sentences = split_sentences_latin(text, min_len=min_len)
@@ -18,26 +18,27 @@ def split_sentences_latin(text, min_len=10):
     text = re.sub('[“”]', '"', text)
     text = re.sub('[‘’]', "'", text)
     text = re.sub(r"[\<\>\(\)\[\]\"\«\»]+", "", text)
+    return [item.strip() for item in txtsplit(text, 512, 512) if item.strip()]
     # 将文本中的换行符、空格和制表符替换为空格
-    text = re.sub('[\n\t ]+', ' ', text)
-    # 在标点符号后添加一个空格
-    text = re.sub('([,.!?;])', r'\1 $#!', text)
-    # 分隔句子并去除前后空格
-    sentences = [s.strip() for s in text.split('$#!')]
-    if len(sentences[-1]) == 0: del sentences[-1]
+    # text = re.sub('[\n\t ]+', ' ', text)
+    # # 在标点符号后添加一个空格
+    # text = re.sub('([,.!?;])', r'\1 $#!', text)
+    # # 分隔句子并去除前后空格
+    # sentences = [s.strip() for s in text.split('$#!')]
+    # if len(sentences[-1]) == 0: del sentences[-1]
 
-    new_sentences = []
-    new_sent = []
-    count_len = 0
-    for ind, sent in enumerate(sentences):
-        # print(sent)
-        new_sent.append(sent)
-        count_len += len(sent.split(" "))
-        if count_len > min_len or ind == len(sentences) - 1:
-            count_len = 0
-            new_sentences.append(' '.join(new_sent))
-            new_sent = []
-    return merge_short_sentences_en(new_sentences)
+    # new_sentences = []
+    # new_sent = []
+    # count_len = 0
+    # for ind, sent in enumerate(sentences):
+    #     # print(sent)
+    #     new_sent.append(sent)
+    #     count_len += len(sent.split(" "))
+    #     if count_len > min_len or ind == len(sentences) - 1:
+    #         count_len = 0
+    #         new_sentences.append(' '.join(new_sent))
+    #         new_sent = []
+    # return merge_short_sentences_en(new_sentences)
 
 def split_sentences_zh(text, min_len=10):
     text = re.sub('[。！？；]', '.', text)

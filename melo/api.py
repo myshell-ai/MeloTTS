@@ -7,6 +7,8 @@ import soundfile
 import torchaudio
 import numpy as np
 import torch.nn as nn
+from tqdm import tqdm
+import torch
 
 from . import utils
 from . import commons
@@ -18,8 +20,12 @@ from .download_utils import load_or_download_config, load_or_download_model
 class TTS(nn.Module):
     def __init__(self, 
                 language,
-                device='cuda:0'):
+                device='auto'):
         super().__init__()
+        if device == 'auto':
+            device = 'cpu'
+            if torch.cuda.is_available(): device = 'cuda'
+            if torch.backends.mps.is_available(): device = 'mps'
         if 'cuda' in device:
             assert torch.cuda.is_available()
 
@@ -63,18 +69,28 @@ class TTS(nn.Module):
         return audio_segments
 
     @staticmethod
-    def split_sentences_into_pieces(text, language):
+    def split_sentences_into_pieces(text, language, quiet=False):
         texts = split_sentence(text, language_str=language)
-        print(" > Text splitted to sentences.")
-        print('\n'.join(texts))
-        print(" > ===========================")
+        if not quiet:
+            print(" > Text split to sentences.")
+            print('\n'.join(texts))
+            print(" > ===========================")
         return texts
 
-    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0):
+    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, format=None, position=None, quiet=False,):
         language = self.language
-        texts = self.split_sentences_into_pieces(text, language)
+        texts = self.split_sentences_into_pieces(text, language, quiet)
         audio_list = []
-        for t in texts:
+        if pbar:
+            tx = pbar(texts)
+        else:
+            if position:
+                tx = tqdm(texts, position=position)
+            elif quiet:
+                tx = texts
+            else:
+                tx = tqdm(texts)
+        for t in tx:
             if language in ['EN', 'ZH_MIX_EN']:
                 t = re.sub(r'([a-z])([A-Z])', r'\1 \2', t)
             device = self.device
@@ -110,4 +126,7 @@ class TTS(nn.Module):
         if output_path is None:
             return audio
         else:
-            soundfile.write(output_path, audio, self.hps.data.sampling_rate)
+            if format:
+                soundfile.write(output_path, audio, self.hps.data.sampling_rate, format=format)
+            else:
+                soundfile.write(output_path, audio, self.hps.data.sampling_rate)

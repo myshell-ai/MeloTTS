@@ -21,11 +21,18 @@ class PostDevelopCommand(develop):
 
 setup(
     name='melo',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
     package_data={
         '': ['*.txt', 'cmudict_*'],
+    },
+    entry_points={
+        "console_scripts": [
+            "melotts = melo.main:main",
+            "melo = melo.main:main",
+            "melo-ui = melo.app:main",
+        ],
     },
 )
