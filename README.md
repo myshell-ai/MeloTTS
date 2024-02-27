@@ -82,7 +82,7 @@ melo "Text to read" output.wav --speed 1.5
 **Use a different language:**
 
 ```bash
-melo "语音合成领域近年来发展迅速" zh.wav -l ZH
+melo "text-to-speech 领域近年来发展迅速" zh.wav -l ZH
 ```
 
 **Load from a file:**
