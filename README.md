@@ -8,11 +8,11 @@ MeloTTS is a **high-quality multi-lingual** text-to-speech library by [MyShell.a
 
 | Language | Example |
 | --- | --- |
-| English               | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN-Default/speed_1.0/sent_000.wav) |
 | English (American)    | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN-US/speed_1.0/sent_000.wav) |
 | English (British)     | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN-BR/speed_1.0/sent_000.wav) |
-| English (Indian)       | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN_INDIA/speed_1.0/sent_000.wav) |
+| English (Indian)      | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN_INDIA/speed_1.0/sent_000.wav) |
 | English (Australian)  | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN-AU/speed_1.0/sent_000.wav) |
+| English (Default)     | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/en/EN-Default/speed_1.0/sent_000.wav) |
 | Spanish               | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/es/ES/speed_1.0/sent_000.wav) |
 | French                | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/fr/FR/speed_1.0/sent_000.wav) |
 | Chinese (mix EN)      | [Link](https://myshell-public-repo-hosting.s3.amazonaws.com/myshellttsbase/examples/zh/ZH/speed_1.0/sent_008.wav) |
@@ -50,10 +50,6 @@ text = "Did you ever hear a folk tale about a giant turtle?"
 model = TTS(language='EN', device=device)
 speaker_ids = model.hps.data.spk2id
 
-# Default accent
-output_path = 'en-default.wav'
-model.tts_to_file(text, speaker_ids['EN-Default'], output_path, speed=speed)
-
 # American accent
 output_path = 'en-us.wav'
 model.tts_to_file(text, speaker_ids['EN-US'], output_path, speed=speed)
@@ -69,6 +65,10 @@ model.tts_to_file(text, speaker_ids['EN_INDIA'], output_path, speed=speed)
 # Australian accent
 output_path = 'en-au.wav'
 model.tts_to_file(text, speaker_ids['EN-AU'], output_path, speed=speed)
+
+# Default accent
+output_path = 'en-default.wav'
+model.tts_to_file(text, speaker_ids['EN-Default'], output_path, speed=speed)
 
 ```
 
