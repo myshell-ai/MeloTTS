@@ -53,7 +53,7 @@ with gr.Blocks() as demo:
 @click.command()
 @click.option('--share', '-s', is_flag=True, show_default=True, default=False, help="Expose a publicly-accessible shared Gradio link usable by anyone with the link. Only share the link with people you trust.")
 @click.option('--host', '-h', default=None)
-@click.option('--port', '-p', default=None)
+@click.option('--port', '-p', type=int, default=None)
 def main(share, host, port):
     demo.queue(api_open=False, default_concurrency_limit=10).launch(show_api=False, share=share, server_name=host, server_port=port)
 
