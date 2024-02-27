@@ -25,8 +25,17 @@ Some other features include:
 
 ## Install on Linux or macOS
 
+**Installation:**
+
 ```bash
-git clone git+https://github.com/myshell-ai/MeloTTS.git
+pip install git+https://github.com/myshell-ai/MeloTTS.git
+python -m unidic download
+```
+
+**Manual installation:**
+
+```bash
+git clone https://github.com/myshell-ai/MeloTTS.git
 cd MeloTTS
 pip install -e .
 python -m unidic download
