@@ -23,16 +23,28 @@ Some other features include:
 - The Chinese speaker supports `mixed Chinese and English`.
 - Fast enough for `CPU real-time inference`.
 
-## Install on Linux
+## Install on Linux or macOS
+
 ```bash
 git clone git@github.com:myshell-ai/MeloTTS.git
 cd MeloTTS
 pip install -e .
 python -m unidic download
 ```
-We welcome the open-source community to make this repo `Mac` and `Windows` compatible. If you find this repo useful, please consider contributing to the repo.
+
+We welcome the open-source community to make this repo `Windows` compatible. If you find this repo useful, please consider contributing to the repo.
 
 ## Usage
+
+An unofficial [live demo](https://huggingface.co/spaces/mrfakename/MeloTTS) is hosted on Hugging Face Spaces.
+
+### WebUI
+
+The WebUI supports muliple languages and voices. First, follow the installation steps. Then, simply run:
+
+```bash
+python app.py
+```
 
 ### English with Multi Accents
 ```python
@@ -42,8 +54,8 @@ from melo.api import TTS
 speed = 1.0
 
 # CPU is sufficient for real-time inference.
-# You can also change to cuda:0
-device = 'cpu'
+# You can set it manually to 'cpu' or 'cuda' or 'cuda:0' or 'mps'
+device = 'auto' # Will automatically use GPU if available
 
 # English 
 text = "Did you ever hear a folk tale about a giant turtle?"
@@ -156,7 +168,7 @@ model.tts_to_file(text, speaker_ids['KR'], output_path, speed=speed)
 ```
 
 ## License
-This library is under MIT License. Free for both commercial and non-commercial use.
+This library is under MIT License, which means it is free for both commercial and non-commercial use.
 
 ## Acknowledgement
 This implementation is based on several excellent projects, [TTS](https://github.com/coqui-ai/TTS), [VITS](https://github.com/jaywalnut310/vits), [VITS2](https://github.com/daniilrobnikov/vits2) and [Bert-VITS2](https://github.com/fishaudio/Bert-VITS2). We appreciate their awesome work!

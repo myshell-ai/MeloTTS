@@ -7,7 +7,7 @@ print("Make sure you've downloaded unidic (python -m unidic download) for this W
 from melo.api import TTS
 speed = 1.0
 import tempfile
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 'auto'
 models = {
     'EN': TTS(language='EN', device=device),
     'ES': TTS(language='ES', device=device),

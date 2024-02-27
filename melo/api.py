@@ -8,6 +8,7 @@ import torchaudio
 import numpy as np
 import torch.nn as nn
 from tqdm import tqdm
+import torch
 
 from . import utils
 from . import commons
@@ -19,8 +20,12 @@ from .download_utils import load_or_download_config, load_or_download_model
 class TTS(nn.Module):
     def __init__(self, 
                 language,
-                device='cuda:0'):
+                device='auto'):
         super().__init__()
+        if device == 'auto':
+            device = 'cpu'
+            if torch.cuda.is_available(): device = 'cuda'
+            if torch.backends.mps.is_available(): device = 'mps'
         if 'cuda' in device:
             assert torch.cuda.is_available()
 
