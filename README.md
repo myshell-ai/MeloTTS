@@ -46,7 +46,54 @@ The WebUI supports muliple languages and voices. First, follow the installation 
 python app.py
 ```
 
-### English with Multi Accents
+### CLI
+
+You may use the MeloTTS CLI to interact with MeloTTS. The CLI may be invoked using either `melotts` or `melo`. Here are some examples:
+
+**Read English text:**
+
+```bash
+melo "Text to read" output.wav
+```
+
+**Specify a language:**
+
+```bash
+melo "Text to read" output.wav --language EN
+```
+
+**Specify a speaker:**
+
+```bash
+melo "Text to read" output.wav --language EN --speaker EN-US
+melo "Text to read" output.wav --language EN --speaker EN-AU
+```
+
+The available speakers are: `EN-Default`, `EN-US`, `EN-BR`, `EN-INDIA` `EN-AU`.
+
+**Specify a speed:**
+
+```bash
+melo "Text to read" output.wav --language EN --speaker EN-US --speed 1.5
+melo "Text to read" output.wav --speed 1.5
+```
+
+**Use a different language:**
+
+```bash
+melo "语音合成领域近年来发展迅速" zh.wav -l ZH
+```
+
+The full API documentation may be found using:
+
+```bash
+melo --help
+```
+
+### Python API
+
+#### English with Multi Accents
+
 ```python
 from melo.api import TTS
 
@@ -103,7 +150,8 @@ output_path = 'es.wav'
 model.tts_to_file(text, speaker_ids['ES'], output_path, speed=speed)
 ```
 
-### French
+#### French
+
 ```python
 from melo.api import TTS
 
@@ -119,7 +167,8 @@ output_path = 'fr.wav'
 model.tts_to_file(text, speaker_ids['FR'], output_path, speed=speed)
 ```
 
-### Chinese
+#### Chinese
+
 ```python
 from melo.api import TTS
 
@@ -135,7 +184,8 @@ output_path = 'zh.wav'
 model.tts_to_file(text, speaker_ids['ZH'], output_path, speed=speed)
 ```
 
-### Japanese
+#### Japanese
+
 ```python
 from melo.api import TTS
 
@@ -151,7 +201,8 @@ output_path = 'jp.wav'
 model.tts_to_file(text, speaker_ids['JP'], output_path, speed=speed)
 ```
 
-### Korean
+#### Korean
+
 ```python
 from melo.api import TTS
 
@@ -168,7 +219,9 @@ model.tts_to_file(text, speaker_ids['KR'], output_path, speed=speed)
 ```
 
 ## License
+
 This library is under MIT License, which means it is free for both commercial and non-commercial use.
 
-## Acknowledgement
+## Acknowledgements
+
 This implementation is based on several excellent projects, [TTS](https://github.com/coqui-ai/TTS), [VITS](https://github.com/jaywalnut310/vits), [VITS2](https://github.com/daniilrobnikov/vits2) and [Bert-VITS2](https://github.com/fishaudio/Bert-VITS2). We appreciate their awesome work!

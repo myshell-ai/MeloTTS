@@ -28,4 +28,10 @@ setup(
     package_data={
         '': ['*.txt', 'cmudict_*'],
     },
+    entry_points={
+        "console_scripts": [
+            "melotts = melo.main:main",
+            "melo = melo.main:main",
+        ],
+    },
 )
