@@ -7,6 +7,7 @@ print("Make sure you've downloaded unidic (python -m unidic download) for this W
 from melo.api import TTS
 speed = 1.0
 import tempfile
+import click
 device = 'auto'
 models = {
     'EN': TTS(language='EN', device=device),
@@ -35,4 +36,12 @@ with gr.Blocks() as demo:
     aud = gr.Audio(interactive=False)
     btn.click(synthesize, inputs=[speaker, text, speed, language], outputs=[aud])
     gr.Markdown('WebUI by [mrfakename](https://twitter.com/realmrfakename).')
-demo.queue(api_open=False, default_concurrency_limit=10).launch(show_api=False)
+@click.command()
+@click.option('--share', '-s', is_flag=True, show_default=True, default=False, help="Expose a publicly-accessible shared Gradio link usable by anyone with the link. Only share the link with people you trust.")
+@click.option('--host', '-h', default=None)
+@click.option('--port', '-p', default=None)
+def main(share, host, port):
+    demo.queue(api_open=False, default_concurrency_limit=10).launch(show_api=False, share=share, server_name=host, server_port=port)
+
+if __name__ == "__main__":
+    main()

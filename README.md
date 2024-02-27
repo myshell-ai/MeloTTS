@@ -43,7 +43,8 @@ An unofficial [live demo](https://huggingface.co/spaces/mrfakename/MeloTTS) is h
 The WebUI supports muliple languages and voices. First, follow the installation steps. Then, simply run:
 
 ```bash
-python app.py
+melo-ui
+# Or: python melo/app.py
 ```
 
 ### CLI
@@ -82,6 +83,12 @@ melo "Text to read" output.wav --speed 1.5
 
 ```bash
 melo "语音合成领域近年来发展迅速" zh.wav -l ZH
+```
+
+**Load from a file:**
+
+```bash
+melo file.txt out.wav --file
 ```
 
 The full API documentation may be found using:

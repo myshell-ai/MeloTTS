@@ -32,6 +32,7 @@ setup(
         "console_scripts": [
             "melotts = melo.main:main",
             "melo = melo.main:main",
+            "melo-ui = melo.app:main",
         ],
     },
 )
