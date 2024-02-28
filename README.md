@@ -27,6 +27,18 @@ Some other features include:
 - [Use without Installation](docs/quick_use.md)
 - [Install and Use Locally](docs/install.md)
 
+## Join the Community
+
+**Open Source AI Grant**
+
+We are actively sponsoring open-source AI projects. The sponsorship includes GPU resources, fundings and intellectual support (collaboration with top research labs). We welcome both reseach and engineering projects, as long as the open-source community needs them. Please contact [Zengyi Qin](https://www.qinzy.tech/) if you are interested.
+
+**Contributing**
+
+If you find this work useful, please consider contributing to this repo.
+
+- Many thanks to [@fakerybakery](https://github.com/fakerybakery) for adding the Web UI and CLI part.
+
 ## License
 
 This library is under MIT License, which means it is free for both commercial and non-commercial use.
@@ -34,5 +46,3 @@ This library is under MIT License, which means it is free for both commercial an
 ## Acknowledgements
 
 This implementation is based on [TTS](https://github.com/coqui-ai/TTS), [VITS](https://github.com/jaywalnut310/vits), [VITS2](https://github.com/daniilrobnikov/vits2) and [Bert-VITS2](https://github.com/fishaudio/Bert-VITS2). We appreciate their awesome work.
-
-Many thanks to [@fakerybakery](https://github.com/fakerybakery) for adding the Web UI and CLI part.
