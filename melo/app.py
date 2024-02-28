@@ -41,7 +41,7 @@ def load_speakers(language, text):
 with gr.Blocks() as demo:
     gr.Markdown('# MeloTTS WebUI\n\nA WebUI for MeloTTS.')
     with gr.Group():
-        speaker = gr.Dropdown(speaker_ids.keys(), interactive=True, value='EN-Default', label='Speaker')
+        speaker = gr.Dropdown(speaker_ids.keys(), interactive=True, value='EN-US', label='Speaker')
         language = gr.Radio(['EN', 'ES', 'FR', 'ZH', 'JP', 'KR'], label='Language', value='EN')
         speed = gr.Slider(label='Speed', minimum=0.1, maximum=10.0, value=1.0, interactive=True, step=0.1)
         text = gr.Textbox(label="Text to speak", value=default_text_dict['EN'])
@@ -53,7 +53,7 @@ with gr.Blocks() as demo:
 @click.command()
 @click.option('--share', '-s', is_flag=True, show_default=True, default=False, help="Expose a publicly-accessible shared Gradio link usable by anyone with the link. Only share the link with people you trust.")
 @click.option('--host', '-h', default=None)
-@click.option('--port', '-p', default=None)
+@click.option('--port', '-p', type=int, default=None)
 def main(share, host, port):
     demo.queue(api_open=False, default_concurrency_limit=10).launch(show_api=False, share=share, server_name=host, server_port=port)
 
