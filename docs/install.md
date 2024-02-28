@@ -38,7 +38,7 @@ docker build -t melotts .
 
 **Run Docker**
 ```bash
-docker run -it -p 8888:8888 melotts
+docker run --gpus all -it -p 8888:8888 melotts
 ```
 Then open [http://localhost:8888](http://localhost:8888) in your browser to use the app.
 
