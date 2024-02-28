@@ -41,7 +41,7 @@ def load_speakers(language, text):
 with gr.Blocks() as demo:
     gr.Markdown('# MeloTTS WebUI\n\nA WebUI for MeloTTS.')
     with gr.Group():
-        speaker = gr.Dropdown(speaker_ids.keys(), interactive=True, value='EN-Default', label='Speaker')
+        speaker = gr.Dropdown(speaker_ids.keys(), interactive=True, value='EN-US', label='Speaker')
         language = gr.Radio(['EN', 'ES', 'FR', 'ZH', 'JP', 'KR'], label='Language', value='EN')
         speed = gr.Slider(label='Speed', minimum=0.1, maximum=10.0, value=1.0, interactive=True, step=0.1)
         text = gr.Textbox(label="Text to speak", value=default_text_dict['EN'])
