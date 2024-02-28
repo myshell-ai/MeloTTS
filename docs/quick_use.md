@@ -33,10 +33,6 @@ Portuguese
 - [voz de menino imaturo](https://app.myshell.ai/widget/nAzeei)
 - [voz masculina sóbria](https://app.myshell.ai/widget/JZRNJz)
 
-Arabic
-- [صوت امرأة ناضجة" في اللغة](https://app.myshell.ai/widget/zqMruu)
-- [صوت رجل ناضج" في اللغة العربية](https://app.myshell.ai/widget/iqMbQr)
-
 Russian
 - [зрелый женский голос](https://app.myshell.ai/widget/6byMZ3)
 - [зрелый мужской голос](https://app.myshell.ai/widget/NB7jmm)
