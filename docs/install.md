@@ -1,14 +1,14 @@
 ## Install and Use Locally
 
 ### Table of Content
-- [Linux or macOS Install](#linux-or-macos-install)
+- [Linux and macOS Install](#linux-and-macos-install)
 - [Docker Install for Windows and macOS](#docker-install)
 - [Usage](#usage)
   - [Web UI](#webui)
   - [CLI](#cli)
   - [Python API](#python-api)
 
-### Linux or macOS Install
+### Linux and macOS Install
 The repo is developed and tested on `Ubuntu 20.04` and `Python 3.9`. Use pip to install from github repo.
 ```bash
 pip install git+https://github.com/myshell-ai/MeloTTS.git
