@@ -20,7 +20,7 @@ class PostDevelopCommand(develop):
         os.system('python -m unidic download')
 
 setup(
-    name='melo',
+    name='melotts',
     version='0.1.1',
     packages=find_packages(),
     include_package_data=True,
