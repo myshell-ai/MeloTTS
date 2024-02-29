@@ -5,8 +5,8 @@ from setuptools.command.install import install
 from pip.req import parse_requirements
 
 cwd = os.path.dirname(os.path.abspath(__file__))
-requirements = parse_requirements('requirements.txt')
-
+install_reqs = parse_requirements('requirements.txt')
+reqs = [str(ir.req) for ir in install_reqs]
 class PostInstallCommand(install):
     """Post-installation for installation mode."""
     def run(self):
@@ -25,7 +25,7 @@ setup(
     version='0.1.2',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=reqs,
     package_data={
         '': ['*.txt', 'cmudict_*'],
     },
