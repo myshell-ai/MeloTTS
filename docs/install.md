@@ -9,9 +9,9 @@
   - [Python API](#python-api)
 
 ### Linux and macOS Install
-The repo is developed and tested on `Ubuntu 20.04` and `Python 3.9`. Use pip to install from github repo.
+The repo is developed and tested on `Ubuntu 20.04` and `Python 3.9`. Use pip to install from PyPI:
 ```bash
-pip install git+https://github.com/myshell-ai/MeloTTS.git
+pip install melotts
 python -m unidic download
 ```
 
