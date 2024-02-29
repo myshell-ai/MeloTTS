@@ -8,7 +8,7 @@
   - [CLI](#cli)
   - [Python API](#python-api)
 
-### Linux Install
+### Linux or macOS Install
 The repo is developed and tested on `Ubuntu 20.04` and `Python 3.9`. Use pip to install from github repo.
 ```bash
 pip install git+https://github.com/myshell-ai/MeloTTS.git
@@ -24,8 +24,8 @@ pip install -e .
 python -m unidic download
 ```
 
-### Windows and macOS Install
-To avoid compatibility issues, for Windows and macOS users, we suggest to run via Docker. Ensure that [you have Docker installed](https://docs.docker.com/engine/install/).
+### Windows Install
+To avoid compatibility issues, for Windows users, we suggest to run via Docker. Ensure that [you have Docker installed](https://docs.docker.com/engine/install/).
 
 **Build Docker**
 
