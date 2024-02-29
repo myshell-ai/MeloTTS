@@ -1,8 +1,8 @@
 ## Install and Use Locally
 
 ### Table of Content
-- [Linux Install](#linux-install)
-- [Windows and macOS](#windows-and-macos-install)
+- [Linux or macOS Install](#linux-or-macos-install)
+- [Docker Install for Windows and macOS](#docker-install)
 - [Usage](#usage)
   - [Web UI](#webui)
   - [CLI](#cli)
@@ -23,9 +23,10 @@ cd MeloTTS
 pip install -e .
 python -m unidic download
 ```
+If you encountered issues in macOS install, try the [Docker Install](#docker-install)
 
-### Windows Install
-To avoid compatibility issues, for Windows users, we suggest to run via Docker. Ensure that [you have Docker installed](https://docs.docker.com/engine/install/).
+### Docker Install
+To avoid compatibility issues, for Windows users and some macOS users, we suggest to run via Docker. Ensure that [you have Docker installed](https://docs.docker.com/engine/install/).
 
 **Build Docker**
 
