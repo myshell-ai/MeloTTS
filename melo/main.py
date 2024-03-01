@@ -2,12 +2,13 @@ import click
 import warnings
 import os
 
+
 @click.command
 @click.argument('text')
 @click.argument('output_path')
 @click.option("--file", '-f', is_flag=True, show_default=True, default=False, help="Text is a file")
 @click.option('--language', '-l', default='EN', help='Language, defaults to English', type=click.Choice(['EN', 'ES', 'FR', 'ZH', 'JP', 'KR'], case_sensitive=False))
-@click.option('--speaker', '-spk', default='EN-Default', help='Speaker ID, only for English, leave empty for default, ignored if not English. If English, defaults to "EN-Default"', type=click.Choice(['EN-Default', 'EN-US', 'EN-BR', 'EN-INDIA', 'EN-AU']))
+@click.option('--speaker', '-spk', default='EN-Default', help='Speaker ID, only for English, leave empty for default, ignored if not English. If English, defaults to "EN-Default"', type=click.Choice(['EN-Default', 'EN-US', 'EN-BR', 'EN_INDIA', 'EN-AU']))
 @click.option('--speed', '-s', default=1.0, help='Speed, defaults to 1.0', type=float)
 @click.option('--device', '-d', default='auto', help='Device, defaults to auto')
 def main(text, file, output_path, language, speaker, speed, device):
@@ -33,6 +34,3 @@ def main(text, file, output_path, language, speaker, speed, device):
     else:
         spkr = speaker_ids[list(speaker_ids.keys())[0]]
     model.tts_to_file(text, spkr, output_path, speed=speed)
-
-if __name__ == "__main__":
-    main()
