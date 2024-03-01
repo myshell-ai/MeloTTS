@@ -5,8 +5,9 @@ import numpy as np
 import soundfile as sf
 import torchaudio
 from txtsplit import txtsplit
+
 def split_sentence(text, min_len=10, language_str='EN'):
-    if language_str in ['EN', 'FR', 'ES', 'SP', 'DE', 'RU']:
+    if language_str in ['EN', 'FR', 'ES', 'SP']:
         sentences = split_sentences_latin(text, min_len=min_len)
     else:
         sentences = split_sentences_zh(text, min_len=min_len)
@@ -19,26 +20,6 @@ def split_sentences_latin(text, min_len=10):
     text = re.sub('[‘’]', "'", text)
     text = re.sub(r"[\<\>\(\)\[\]\"\«\»]+", "", text)
     return [item.strip() for item in txtsplit(text, 512, 512) if item.strip()]
-    # 将文本中的换行符、空格和制表符替换为空格
-    # text = re.sub('[\n\t ]+', ' ', text)
-    # # 在标点符号后添加一个空格
-    # text = re.sub('([,.!?;])', r'\1 $#!', text)
-    # # 分隔句子并去除前后空格
-    # sentences = [s.strip() for s in text.split('$#!')]
-    # if len(sentences[-1]) == 0: del sentences[-1]
-
-    # new_sentences = []
-    # new_sent = []
-    # count_len = 0
-    # for ind, sent in enumerate(sentences):
-    #     # print(sent)
-    #     new_sent.append(sent)
-    #     count_len += len(sent.split(" "))
-    #     if count_len > min_len or ind == len(sentences) - 1:
-    #         count_len = 0
-    #         new_sentences.append(' '.join(new_sent))
-    #         new_sent = []
-    # return merge_short_sentences_en(new_sentences)
 
 def split_sentences_zh(text, min_len=10):
     text = re.sub('[。！？；]', '.', text)
@@ -121,11 +102,8 @@ if __name__ == '__main__':
     en_text = "I didn’t know what to do. I said please kill her because it would be better than being kidnapped,” Ben, whose surname CNN is not using for security concerns, said on Wednesday. “It’s a nightmare. I said ‘please kill her, don’t take her there.’"
     sp_text = "¡Claro! ¿En qué tema te gustaría que te hable en español? Puedo proporcionarte información o conversar contigo sobre una amplia variedad de temas, desde cultura y comida hasta viajes y tecnología. ¿Tienes alguna preferencia en particular?"
     fr_text = "Bien sûr ! En quelle matière voudriez-vous que je vous parle en français ? Je peux vous fournir des informations ou discuter avec vous sur une grande variété de sujets, que ce soit la culture, la nourriture, les voyages ou la technologie. Avez-vous une préférence particulière ?"
-    de_text = 'Es war das Wichtigste was wir sichern wollten da es keine Möglichkeit gab eine 20 Megatonnen- H- Bombe ab zu werfen von einem 30, C124.'
-    ru_text = 'Но он был во многом, как-бы, всё равно что сын плантатора, так как являлся сыном человека, у которого было в собственности много чего.'
+
     print(split_sentence(zh_text, language_str='ZH'))
     print(split_sentence(en_text, language_str='EN'))
     print(split_sentence(sp_text, language_str='SP'))
     print(split_sentence(fr_text, language_str='FR'))
-    print(split_sentence(de_text, language_str='DE'))
-    print(split_sentence(ru_text, language_str='RU'))
