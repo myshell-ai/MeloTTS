@@ -27,6 +27,8 @@ Some other features include:
 - [Use without Installation](docs/quick_use.md)
 - [Install and Use Locally](docs/install.md)
 
+The Python API and model cards can be found in [this repo](https://github.com/myshell-ai/MeloTTS/blob/main/docs/install.md#python-api) or on [HuggingFace](https://huggingface.co/myshell-ai).
+
 ## Join the Community
 
 **Open Source AI Grant**
