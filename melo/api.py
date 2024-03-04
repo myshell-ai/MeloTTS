@@ -76,8 +76,6 @@ class TTS(nn.Module):
             print(" > Text split to sentences.")
             print('\n'.join(texts))
             print(" > ===========================")
-        # remove too long texts to avoid memory issues
-        texts = [text for text in texts if len(text) < 50]
         return texts
 
     def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, format=None, position=None, quiet=False,):
