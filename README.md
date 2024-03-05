@@ -33,7 +33,7 @@ The Python API and model cards can be found in [this repo](https://github.com/my
 
 **Open Source AI Grant**
 
-We are actively sponsoring open-source AI projects. The sponsorship includes GPU resources, fundings and intellectual support (collaboration with top research labs). We welcome both reseach and engineering projects, as long as the open-source community needs them. Please contact [Zengyi Qin](https://www.qinzy.tech/) if you are interested.
+We are actively sponsoring open-source AI projects. The sponsorship includes GPU resources, fundings and intellectual support (collaboration with top research labs). We welcome both research and engineering projects, as long as the open-source community needs them. Please contact [Zengyi Qin](https://www.qinzy.tech/) if you are interested.
 
 **Contributing**
 
