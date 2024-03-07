@@ -2,7 +2,8 @@
 
 **Quick Demo**
 
-An unofficial [live demo](https://huggingface.co/spaces/mrfakename/MeloTTS) is hosted on Hugging Face Spaces.
+- [Official live demo](https://app.myshell.ai/bot/UN77N3/1709094629) on Myshell.
+- Hugging Face Space [live demo](https://huggingface.co/spaces/mrfakename/MeloTTS).
 
 **Use on MyShell**
 
