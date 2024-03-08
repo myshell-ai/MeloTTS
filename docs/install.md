@@ -38,7 +38,7 @@ docker run --gpus all -it -p 8888:8888 melotts
 
 Run as a FastAPI streaming server:
 ```bash
-docker run --gpus all -it -p 8888:8888 -e APP_MODE=api melott
+docker run --gpus all -it -p 8888:8888 -e APP_MODE=api melotts
 ```
 Then open [http://localhost:8888](http://localhost:8888) in your browser to use the app.
 
