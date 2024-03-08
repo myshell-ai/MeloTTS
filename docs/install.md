@@ -53,7 +53,7 @@ melo-ui
 # Or: python melo/app.py
 ```
 
-### Streaming API (Docker)
+### Streaming API
 One application for the streaming API could be for an AI assistant. The following block of code provides some guidance on how to read from the stream:
 ```python
 import requests
