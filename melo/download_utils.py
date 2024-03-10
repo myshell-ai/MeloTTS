@@ -25,9 +25,9 @@ DOWNLOAD_CONFIG_URLS = {
 }
 
 PRETRAINED_MODELS = {
-    'G.pth': 'https://cloud.tsinghua.edu.cn/f/91346812c11746e1b67b/?dl=1',
-    'D.pth': 'https://cloud.tsinghua.edu.cn/f/4734a5281219424199f1/?dl=1',
-    'DUR.pth': 'https://cloud.tsinghua.edu.cn/f/750feac7585f49ce96d7/?dl=1',
+    'G.pth': 'https://myshell-public-repo-hosting.s3.amazonaws.com/openvoice/basespeakers/pretrained/G.pth',
+    'D.pth': 'https://myshell-public-repo-hosting.s3.amazonaws.com/openvoice/basespeakers/pretrained/D.pth',
+    'DUR.pth': 'https://myshell-public-repo-hosting.s3.amazonaws.com/openvoice/basespeakers/pretrained/DUR.pth',
 }
 
 LANG_TO_HF_REPO_ID = {
