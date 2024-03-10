@@ -24,6 +24,12 @@ DOWNLOAD_CONFIG_URLS = {
     'KR': 'https://myshell-public-repo-hosting.s3.amazonaws.com/openvoice/basespeakers/KR/config.json',
 }
 
+PRETRAINED_MODELS = {
+    'G.pth': 'https://cloud.tsinghua.edu.cn/f/91346812c11746e1b67b/?dl=1',
+    'D.pth': 'https://cloud.tsinghua.edu.cn/f/4734a5281219424199f1/?dl=1',
+    'DUR.pth': 'https://cloud.tsinghua.edu.cn/f/750feac7585f49ce96d7/?dl=1',
+}
+
 LANG_TO_HF_REPO_ID = {
     'EN': 'myshell-ai/MeloTTS-English',
     'EN_V2': 'myshell-ai/MeloTTS-English-v2',
@@ -34,22 +40,27 @@ LANG_TO_HF_REPO_ID = {
     'KR': 'myshell-ai/MeloTTS-Korean',
 }
 
-def load_or_download_config(locale, use_hf=True):
-    language = locale.split('-')[0].upper()
-    if use_hf:
-        assert language in LANG_TO_HF_REPO_ID
-        config_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="config.json")
-    else:
-        assert language in DOWNLOAD_CONFIG_URLS
-        config_path = cached_path(DOWNLOAD_CONFIG_URLS[language])
+def load_or_download_config(locale, use_hf=True, config_path=None):
+    if config_path is None:
+        language = locale.split('-')[0].upper()
+        if use_hf:
+            assert language in LANG_TO_HF_REPO_ID
+            config_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="config.json")
+        else:
+            assert language in DOWNLOAD_CONFIG_URLS
+            config_path = cached_path(DOWNLOAD_CONFIG_URLS[language])
     return utils.get_hparams_from_file(config_path)
 
-def load_or_download_model(locale, device, use_hf=True):
-    language = locale.split('-')[0].upper()
-    if use_hf:
-        assert language in LANG_TO_HF_REPO_ID
-        ckpt_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="checkpoint.pth")
-    else:
-        assert language in DOWNLOAD_CKPT_URLS
-        ckpt_path = cached_path(DOWNLOAD_CKPT_URLS[language])
+def load_or_download_model(locale, device, use_hf=True, ckpt_path=None):
+    if ckpt_path is None:
+        language = locale.split('-')[0].upper()
+        if use_hf:
+            assert language in LANG_TO_HF_REPO_ID
+            ckpt_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="checkpoint.pth")
+        else:
+            assert language in DOWNLOAD_CKPT_URLS
+            ckpt_path = cached_path(DOWNLOAD_CKPT_URLS[language])
     return torch.load(ckpt_path, map_location=device)
+
+def load_pretrain_model():
+    return [cached_path(url) for url in PRETRAINED_MODELS.values()]
