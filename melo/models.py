@@ -3,14 +3,15 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from . import commons
-from . import modules
-from . import attentions
+from melo import commons
+from melo import modules
+from melo import attentions
 
 from torch.nn import Conv1d, ConvTranspose1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
 
-from .commons import init_weights, get_padding
+from melo.commons import init_weights, get_padding
+import melo.monotonic_align as monotonic_align
 
 
 class DurationDiscriminator(nn.Module):  # vits2
@@ -782,7 +783,6 @@ class SynthesizerTrn(nn.Module):
         num_languages=None,
         num_tones=None,
         norm_refenc=False,
-        use_se=False,
         **kwargs
     ):
         super().__init__()
@@ -878,16 +878,12 @@ class SynthesizerTrn(nn.Module):
             hidden_channels, 256, 3, 0.5, gin_channels=gin_channels
         )
 
-        if n_speakers > 1:
-            if use_se:
-                emb_dim = 512
-                self.emb_g = nn.Linear(emb_dim, gin_channels)
-            else:
-                self.emb_g = nn.Embedding(n_speakers, gin_channels)
+        if n_speakers > 0:
+            self.emb_g = nn.Embedding(n_speakers, gin_channels)
         else:
             self.ref_enc = ReferenceEncoder(spec_channels, gin_channels, layernorm=norm_refenc)
         self.use_vc = use_vc
-        self.use_se = use_se
+
 
     def forward(self, x, x_lengths, y, y_lengths, sid, tone, language, bert, ja_bert):
         if self.n_speakers > 0:
@@ -1024,11 +1020,7 @@ class SynthesizerTrn(nn.Module):
         # print('max/min of o:', o.max(), o.min())
         return o, attn, y_mask, (z, z_p, m_p, logs_p)
 
-    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):
-        if self.use_se:
-            sid_src = self.emb_g(sid_src).unsqueeze(-1)
-            sid_tgt = self.emb_g(sid_tgt).unsqueeze(-1)
-        
+    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):        
         g_src = sid_src
         g_tgt = sid_tgt
         z, m_q, logs_q, y_mask = self.enc_q(y, y_lengths, g=g_src, tau=tau)
