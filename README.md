@@ -26,6 +26,7 @@ Some other features include:
 ## Usage
 - [Use without Installation](docs/quick_use.md)
 - [Install and Use Locally](docs/install.md)
+- [Training on Custom Dataset](docs/training.md)
 
 The Python API and model cards can be found in [this repo](https://github.com/myshell-ai/MeloTTS/blob/main/docs/install.md#python-api) or on [HuggingFace](https://huggingface.co/myshell-ai).
 
@@ -56,10 +57,6 @@ If you find this work useful, please consider contributing to this repo.
   year = {2023}
 }
 ```
-
-## TODO
-
-- Training code release.
 
 ## License
 

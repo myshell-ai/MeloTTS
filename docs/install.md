@@ -33,6 +33,10 @@ docker build -t melotts .
 **Run Docker**
 Run as a default Gradio app:
 ```bash
+docker run -it -p 8888:8888 melotts
+```
+If your local machine has GPU, then you can choose to run:
+```bash
 docker run --gpus all -it -p 8888:8888 melotts
 ```
 
