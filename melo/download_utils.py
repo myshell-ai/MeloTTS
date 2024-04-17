@@ -33,6 +33,7 @@ PRETRAINED_MODELS = {
 LANG_TO_HF_REPO_ID = {
     'EN': 'myshell-ai/MeloTTS-English',
     'EN_V2': 'myshell-ai/MeloTTS-English-v2',
+    'EN_V3': 'myshell-ai/MeloTTS-English-v3',
     'FR': 'myshell-ai/MeloTTS-French',
     'JP': 'myshell-ai/MeloTTS-Japanese',
     'ES': 'myshell-ai/MeloTTS-Spanish',
