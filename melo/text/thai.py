@@ -72,35 +72,43 @@ def g2p(norm_text):
     tokenized = tokenizer.tokenize(norm_text)
     phs = []
     ph_groups = []
+    current_group = []  # Track the current group of tokens
+
     for t in tokenized:
-        if not t.startswith("▁"):
-            ph_groups.append([t])
-        else:
-            ph_groups[-1].append(t.replace("▁", ""))
+        if t.startswith("▁"):  # Start of a new word or phrase
+            if current_group:  # Append current group to ph_groups if not empty
+                ph_groups.append(current_group)
+                current_group = []  # Reset current_group for the new word or phrase
+        current_group.append(t.replace("▁", ""))  # Add token to current_group
+
+    if current_group:  # Append the last group if not empty
+        ph_groups.append(current_group)
+
     word2ph = []
+    import pdb; pdb.set_trace();
     for group in ph_groups:
-        text = ""
-        for ch in group:
-            text += ch
+        text = "".join(group)  # Concatenate tokens in the group to form the word or phrase
         if text == '[UNK]':
-            phs += ['_']
-            word2ph += [1]
+            phs.append('_')
+            word2ph.append(1)
             continue
         elif text in punctuation:
-            phs += [text]
-            word2ph += [1]
+            phs.append(text)
+            word2ph.append(1)
             continue
         phonemes = thai_text_to_phonemes(text)
         phone_len = len(phonemes.split())
         word_len = len(group)
         aaa = distribute_phone(phone_len, word_len)
         assert len(aaa) == word_len
-        word2ph += aaa
-        phs += phonemes.split()
+        word2ph.extend(aaa)
+        phs.extend(phonemes.split())
+
     phones = ["_"] + phs + ["_"]
-    tones = [0 for i in phones]
+    tones = [0 for _ in phones]
     word2ph = [1] + word2ph + [1]
     assert len(word2ph) == len(tokenized) + 2
+
     return phones, tones, word2ph
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
