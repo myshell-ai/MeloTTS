@@ -1,28 +1,28 @@
 import pytest
-from melo.text.thai import normalize, tokenizer, thai_text_to_phonemes, text_normalize, g2p, get_bert_feature
+from thai import normalize, word_tokenize, thai_text_to_phonemes, text_normalize, g2p, get_bert_feature
 
 def test_normalize():
     text = "   ข้อความ ภาษา ไทย 123 ABC   "
     normalized_text = normalize(text)
     assert normalized_text == "ข้อความ ภาษา ไทย หนึ่งร้อยยี่สิบสาม เอบีซี"
 
-def test_tokenize():
+def test_word_tokenize():
     text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี"
-    tokenized_text = tokenizer.tokenize(text)
-    assert tokenized_text == ['▁ฉัน', 'เข้าใจ', 'คุณค่า', 'ของ', 'งาน', 'ของ', 'ฉัน', 'และ', 'ความหมาย', 'ของ', 'สิ่ง', 'ที่', 'ฟ', 'อน', 'เท', 'น', 'ทำ', 'เพื่อ', 'คน', 'ทั่วไป', 'เป็นอย่างดี']
+    tokenized_text = word_tokenize(text, engine="newmm")
+    assert tokenized_text == ['ฉัน', 'เข้าใจ', 'คุณค่า', 'ของ', 'งาน', 'ของ', 'ฉัน', 'และ', 'ความหมาย', 'ของ', 'สิ่ง', 'ที่', 'ฟอนเทน', 'ทำ', 'เพื่อ', 'คน', 'ทั่วไป', 'เป็นอย่างดี']
 
 def test_thai_text_to_phonemes():
     text = "สวัสดีครับ"
     phonemes = thai_text_to_phonemes(text)
-    assert phonemes == "ส ว ั ส ด ี ค ร ั บ"
+    assert phonemes == "s a ˧ . w a t̚ ˨˩ . d iː ˧ . kʰ r a p̚ ˨˩"
 
 def test_g2p():
     text = "ฉันรักเมืองไทย"
     normalized_text = text_normalize(text)
     phones, tones, word2ph = g2p(normalized_text)
-    assert phones == ['_', 'ฉ', 'ั', 'น', 'ร', 'ั', 'ก', 'เ', 'ม', 'ื', 'อ', 'ง', 'ไ', 'ท', 'ย', '_']
-    assert tones == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    assert word2ph == [1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    assert phones == ['_', 'tɕ̰', 'a', 'n', 'r', 'a', 'k̚', 'm', 'ɯa', 'ŋ', 'tʰ', 'a', 'j', '_']
+    assert tones == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    assert word2ph == [1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1]
 
 def test_get_bert_feature():
     text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี"

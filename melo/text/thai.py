@@ -88,7 +88,7 @@ def g2p(norm_text):
     import pdb; pdb.set_trace();
     for group in ph_groups:
         text = "".join(group)  # Concatenate tokens in the group to form the word or phrase
-        if text == '[UNK]':
+        if text == '[UNK]': # handle special cases like unknown tokens ("[UNK]")
             phs.append('_')
             word2ph.append(1)
             continue
