@@ -40,5 +40,4 @@ english_dictionary = {
     "X": "เอ็กซ์",
     "Y": "วาย",
     "Z": "แซด",
-    # TODO: Add more English words commonly used in Thai
 }

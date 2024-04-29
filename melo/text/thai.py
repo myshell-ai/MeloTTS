@@ -19,6 +19,7 @@ def normalize(text):
     text = text.strip()
     text = thai_normalize(text)
     text = normalize_with_dictionary(text, etc_dictionary)
+    text = re.sub(r"\d+", lambda x: num2words(int(x.group()), lang="th"), text)
     text = normalize_english(text)
     text = text.lower()
     return text
@@ -28,9 +29,9 @@ def normalize_english(text):
         word = m.group()
         if word.upper() in english_dictionary:
             return english_dictionary[word.upper()]
-        return eng_to_thai(word)
+        return "".join(english_dictionary.get(char.upper(), char) for char in word)
 
-    text = re.sub("([A-Za-z]+)", fn, text)
+    text = re.sub(r"([A-Za-z]+)", fn, text)
     return text
 
 # Load the Thai G2P dictionary
