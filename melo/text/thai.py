@@ -33,19 +33,24 @@ def normalize_english(text):
     text = re.sub("([A-Za-z]+)", fn, text)
     return text
 
-def thai_text_to_phonemes(text, character: str = "thai") -> str:
-    """
-    Convert Thai text to phonemes using the PyThaiNLP library.
-    """
-    if character == "english":
-        text = normalize(text)
-        text = romanize(text)
-        return text
+# Load the Thai G2P dictionary
+thai_g2p_dict = {}
 
+with open("wiktionary-23-7-2022-clean.tsv", "r", encoding="utf-8") as f:
+    for line in f:
+        word, phonemes = line.strip().split("\t")
+        thai_g2p_dict[word] = phonemes.split()
+
+def map_word_to_phonemes(word):
+    return thai_g2p_dict.get(word, list(word))
+
+def thai_text_to_phonemes(text):
     text = normalize(text)
+    words = word_tokenize(text, engine="newmm")
     phonemes = []
-    for word in word_tokenize(text, engine="newmm"):
-        phonemes.extend(word)
+    for word in words:
+        word_phonemes = map_word_to_phonemes(word)
+        phonemes.extend(word_phonemes)
     return " ".join(phonemes)
 
 def text_normalize(text):
