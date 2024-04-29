@@ -1,5 +1,5 @@
 txtsplit
-torch<2.0
+torch
 torchaudio
 cached_path
 transformers==4.27.4
