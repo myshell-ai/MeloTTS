@@ -1,5 +1,5 @@
 import pytest
-from thai import normalize, word_tokenize, thai_text_to_phonemes, text_normalize, g2p, get_bert_feature
+from melo.text.thai import normalize, word_tokenize, thai_text_to_phonemes, text_normalize, g2p, get_bert_feature
 
 def test_normalize():
     text = "   ข้อความ ภาษา ไทย 123 ABC   "

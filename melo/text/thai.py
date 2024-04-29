@@ -112,7 +112,7 @@ def g2p(norm_text):
     return phones, tones, word2ph
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
-    from . import bert as thai_bert
+    from . import thai_bert
     return thai_bert.get_bert_feature(text, word2ph, device=device, model_id=model_id)
 
 if __name__ == "__main__":
