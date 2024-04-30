@@ -14,7 +14,7 @@ def test_word_tokenize():
 def test_thai_text_to_phonemes():
     text = "สวัสดีครับ"
     phonemes = thai_text_to_phonemes(text)
-    assert phonemes == "s a ˧ . w a t̚ ˨˩ . d iː ˧ . kʰ r a p̚ ˨˩"
+    assert phonemes == "s a ˨˩ . w a t̚ ˨˩ . d iː ˧ kʰ r a p̚ ˦˥"
 
 def test_g2p():
     text = "ฉันรักเมืองไทย"
