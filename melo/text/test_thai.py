@@ -1,9 +1,18 @@
 import pytest
 import torch
-from melo.text.thai import normalize, word_tokenize, thai_text_to_phonemes, text_normalize, g2p, get_bert_feature
-from melo.text.korean import text_normalize as k_text_normalize
-from melo.text.korean import get_bert_feature as k_get_bert_feature
-from melo.text.korean import g2p as k_g2p
+from melo.text.thai import (
+    normalize,
+    word_tokenize,
+    thai_text_to_phonemes,
+    text_normalize,
+    g2p,
+    get_bert_feature,
+)
+from melo.text.korean import (
+    text_normalize as k_text_normalize,
+    get_bert_feature as k_get_bert_feature,
+    g2p as k_g2p,
+)
 
 def test_normalize():
     text = "   ข้อความ ภาษา ไทย 123 ABC   "
