@@ -117,27 +117,15 @@ def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchan
     return thai_bert.get_bert_feature(text, word2ph, device=device, model_id=model_id)
 
 if __name__ == "__main__":
-    from text.symbols import symbols
-    text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี ฉันจะใช้ชีวิตอย่างภาคภูมิใจในงานของฉันต่อไป"
-    import json
-
-    # Load Thai dataset
-    thai_data = json.load(open('thai_dataset.json'))
-    from tqdm import tqdm
-    new_symbols = []
-    for key, item in tqdm(thai_data.items()):
-        texts = item.get('voiceContent', '')
-        if isinstance(texts, list):
-            texts = ','.join(texts)
-        if texts is None:
-            continue
-        if len(texts) == 0:
-            continue
+    try:
+        from text.symbols import symbols
+        text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี ฉันจะใช้ชีวิตอย่างภาคภูมิใจในงานของฉันต่อไป"
 
         text = text_normalize(text)
         phones, tones, word2ph = g2p(text)
         bert = get_bert_feature(text, word2ph, device='cuda', model_id=model_id)
 
+        new_symbols = []
         for ph in phones:
             if ph not in symbols and ph not in new_symbols:
                 new_symbols.append(ph)
@@ -145,3 +133,6 @@ if __name__ == "__main__":
                 print(new_symbols)
                 with open('thai_symbol.txt', 'w') as f:
                     f.write(f'{new_symbols}')
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
