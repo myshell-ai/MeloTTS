@@ -844,9 +844,9 @@ class SynthesizerTrn(nn.Module):
             num_tones=num_tones,
         )
         if n_vocab != 219:
-            old_embeddings = self.enc_p.embed_tokens
+            old_embeddings = self.enc_p.emb
             new_num_tokens = n_vocab
-            self.enc_p.embed_tokens = self.get_resized_embeddings(old_embeddings, new_num_tokens)
+            self.enc_p.emb = self.get_resized_embeddings(old_embeddings, new_num_tokens)
         self.dec = Generator(
             inter_channels,
             resblock,
