@@ -9,7 +9,6 @@ from melo import attentions
 
 from torch.nn import Conv1d, ConvTranspose1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
-from transformers.modeling_utils import _get_resized_embeddings
 
 from melo.commons import init_weights, get_padding
 import melo.monotonic_align as monotonic_align
@@ -847,7 +846,7 @@ class SynthesizerTrn(nn.Module):
         if n_vocab != 219:
             old_embeddings = self.enc_p.embed_tokens
             new_num_tokens = n_vocab
-            self.enc_p.embed_tokens = _get_resized_embeddings(old_embeddings, new_num_tokens)
+            self.enc_p.embed_tokens = self.get_resized_embeddings(old_embeddings, new_num_tokens)
         self.dec = Generator(
             inter_channels,
             resblock,
@@ -902,6 +901,23 @@ class SynthesizerTrn(nn.Module):
             self.ref_enc = ReferenceEncoder(spec_channels, gin_channels, layernorm=norm_refenc)
         self.use_vc = use_vc
 
+    def get_resized_embeddings(self, old_embeddings, new_num_tokens):
+        old_num_tokens, old_embedding_dim = old_embeddings.weight.size()
+        if old_num_tokens == new_num_tokens:
+            return old_embeddings
+
+        if not isinstance(old_embeddings, nn.Embedding):
+            raise TypeError(
+                f"Old embeddings are of type {type(old_embeddings)}, which is not an instance of {nn.Embedding}. "
+                f"You should either use a different resize function or make sure that `old_embeddings` are an instance of {nn.Embedding}."
+            )
+
+        new_embeddings = nn.Embedding(new_num_tokens, old_embedding_dim).to(
+            device=old_embeddings.weight.device, dtype=old_embeddings.weight.dtype
+        )
+        new_embeddings.weight.data[:old_num_tokens, :] = old_embeddings.weight.data[:old_num_tokens, :]
+
+        return new_embeddings
 
     def forward(self, x, x_lengths, y, y_lengths, sid, tone, language, bert, ja_bert):
         if self.n_speakers > 0:
