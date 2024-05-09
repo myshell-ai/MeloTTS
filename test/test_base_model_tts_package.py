@@ -5,7 +5,8 @@ import sys
 
 
 language = sys.argv[1]
-model = TTS(language=language)
+# model = TTS(language=language)
+model = TTS(language=language, hf_repo='HShawn/t4', hf_ckpt='checkpoint.safetensors')
 
 speaker_ids = model.hps.data.spk2id
 speakers = list(speaker_ids.keys())

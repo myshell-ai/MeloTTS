@@ -52,15 +52,23 @@ def load_or_download_config(locale, use_hf=True, config_path=None):
             config_path = cached_path(DOWNLOAD_CONFIG_URLS[language])
     return utils.get_hparams_from_file(config_path)
 
-def load_or_download_model(locale, device, use_hf=True, ckpt_path=None):
+def load_or_download_model(locale, device, use_hf=True, ckpt_path=None, hf_repo=None, hf_ckpt=None):
     if ckpt_path is None:
-        language = locale.split('-')[0].upper()
-        if use_hf:
-            assert language in LANG_TO_HF_REPO_ID
-            ckpt_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="checkpoint.pth")
-        else:
-            assert language in DOWNLOAD_CKPT_URLS
-            ckpt_path = cached_path(DOWNLOAD_CKPT_URLS[language])
+        # unofficial weight
+        if hf_repo is not None and hf_ckpt is not None:
+            ckpt_path = hf_hub_download(repo_id=hf_repo, filename=hf_ckpt)
+            if '.safetensors' in hf_ckpt:
+                from safetensors.torch import load_file
+                return {'model': load_file(ckpt_path)}
+
+        else: # pre-defined official weight
+            language = locale.split('-')[0].upper()
+            if use_hf:
+                assert language in LANG_TO_HF_REPO_ID
+                ckpt_path = hf_hub_download(repo_id=LANG_TO_HF_REPO_ID[language], filename="checkpoint.pth")
+            else:
+                assert language in DOWNLOAD_CKPT_URLS
+                ckpt_path = cached_path(DOWNLOAD_CKPT_URLS[language])
     return torch.load(ckpt_path, map_location=device)
 
 def load_pretrain_model():
