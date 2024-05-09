@@ -9,6 +9,7 @@ from melo import attentions
 
 from torch.nn import Conv1d, ConvTranspose1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
+from transformers.modeling_utils import _get_resized_embeddings
 
 from melo.commons import init_weights, get_padding
 import melo.monotonic_align as monotonic_align
@@ -830,6 +831,23 @@ class SynthesizerTrn(nn.Module):
             num_languages=num_languages,
             num_tones=num_tones,
         )
+        self.enc_p = TextEncoder(
+            219,  # Initialize with the original symbol size
+            inter_channels,
+            hidden_channels,
+            filter_channels,
+            n_heads,
+            n_layers,
+            kernel_size,
+            p_dropout,
+            gin_channels=self.enc_gin_channels,
+            num_languages=num_languages,
+            num_tones=num_tones,
+        )
+        if n_vocab != 219:
+            old_embeddings = self.enc_p.embed_tokens
+            new_num_tokens = n_vocab
+            self.enc_p.embed_tokens = _get_resized_embeddings(old_embeddings, new_num_tokens)
         self.dec = Generator(
             inter_channels,
             resblock,
@@ -998,7 +1016,7 @@ class SynthesizerTrn(nn.Module):
             sdp_ratio
         ) + self.dp(x, x_mask, g=g) * (1 - sdp_ratio)
         w = torch.exp(logw) * x_mask * length_scale
-        
+
         w_ceil = torch.ceil(w)
         y_lengths = torch.clamp_min(torch.sum(w_ceil, [1, 2]), 1).long()
         y_mask = torch.unsqueeze(commons.sequence_mask(y_lengths, None), 1).to(
@@ -1020,7 +1038,7 @@ class SynthesizerTrn(nn.Module):
         # print('max/min of o:', o.max(), o.min())
         return o, attn, y_mask, (z, z_p, m_p, logs_p)
 
-    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):        
+    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):
         g_src = sid_src
         g_tgt = sid_tgt
         z, m_q, logs_q, y_mask = self.enc_q(y, y_lengths, g=g_src, tau=tau)
