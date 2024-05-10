@@ -1,7 +1,7 @@
 import re
 import unicodedata
 from transformers import AutoTokenizer
-from . import punctuation, symbols
+from . import punctuation, symbols, pu_symbols
 from num2words import num2words
 from pythainlp.tokenize import word_tokenize
 from pythainlp.transliterate import romanize
@@ -74,27 +74,26 @@ def g2p(norm_text):
     phs = []
     ph_groups = []
     current_group = []  # Track the current group of tokens
+    word2ph = []
 
     for t in tokenized:
-        if t.startswith("▁"):  # Start of a new word or phrase
-            if current_group:  # Append current group to ph_groups if not empty
-                ph_groups.append(current_group)
-                current_group = []  # Reset current_group for the new word or phrase
-        current_group.append(t.replace("▁", ""))  # Add token to current_group
+        if t in punctuation or t in pu_symbols:  # Check if the token is a special character
+            phs.append(t)
+            word2ph.append(1)
+        else:
+            if t.startswith("▁"):  # Start of a new word or phrase
+                if current_group:  # Append current group to ph_groups if not empty
+                    ph_groups.append(current_group)
+                    current_group = []  # Reset current_group for the new word or phrase
+            current_group.append(t.replace("▁", ""))  # Add token to current_group
 
     if current_group:  # Append the last group if not empty
         ph_groups.append(current_group)
 
-    word2ph = []
-
     for group in ph_groups:
         text = "".join(group)  # Concatenate tokens in the group to form the word or phrase
-        if text == '[UNK]': # handle special cases like unknown tokens ("[UNK]")
+        if text == '[UNK]':  # handle special cases like unknown tokens ("[UNK]")
             phs.append('_')
-            word2ph.append(1)
-            continue
-        elif text in punctuation:
-            phs.append(text)
             word2ph.append(1)
             continue
         phonemes = thai_text_to_phonemes(text)
@@ -108,9 +107,11 @@ def g2p(norm_text):
     phones = ["_"] + phs + ["_"]
     tones = [0 for _ in phones]
     word2ph = [1] + word2ph + [1]
+
     assert len(word2ph) == len(tokenized) + 2
 
     return phones, tones, word2ph
+
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
     from . import thai_bert
