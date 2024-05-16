@@ -33,9 +33,9 @@ def test_g2p():
     text = "ฉันรักเมืองไทย"
     normalized_text = text_normalize(text)
     phones, tones, word2ph = g2p(normalized_text)
-    assert phones == ['_', 't͡ɕʰ', 'a', 'n', '˩˩˦', 'r', 'a', 'k̚', '˦˥', 'm', 'ɯa̯', 'ŋ', '˧', 'tʰ', 'aj', '˧', '.', 'j', 'a', '˦˥', '.', '_']
-    assert tones == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    assert word2ph == [1, 7, 7, 6, 1]
+    assert phones == ['_', 't͡ɕʰ', 'a', 'n', '', 'r', 'a', 'k̚', '', 'm', 'ɯa̯', 'ŋ', '', 'tʰ', 'aj', '', '.', 'j', 'a', '', '.', '_']
+    assert tones == [0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 5, 0]
+    assert word2ph == [1, 0, 8, 12, 1]
 
 def test_get_bert_feature():
     text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี"

@@ -72,46 +72,74 @@ tokenizer = AutoTokenizer.from_pretrained(model_id)
 def g2p(norm_text):
     tokenized = tokenizer.tokenize(norm_text)
     phs = []
-    ph_groups = []
-    current_group = []  # Track the current group of tokens
     word2ph = []
+    current_word = []
+    current_phonemes = []
 
-    for t in tokenized:
-        if t in punctuation or t in pu_symbols:  # Check if the token is a special character
-            phs.append(t)
+    for token in tokenized:
+        if token.startswith("▁"):  # Start of a new word
+            if current_word:
+                word_phonemes = " ".join(current_phonemes)
+                phs.extend(word_phonemes.split())
+                word2ph.append(len(current_phonemes))
+                current_word = []
+                current_phonemes = []
+            current_word.append(token.replace("▁", ""))
+        else:
+            current_word.append(token)
+
+        if token in punctuation or token in pu_symbols:
+            phs.append(token)
             word2ph.append(1)
         else:
-            if t.startswith("▁"):  # Start of a new word or phrase
-                if current_group:  # Append current group to ph_groups if not empty
-                    ph_groups.append(current_group)
-                    current_group = []  # Reset current_group for the new word or phrase
-            current_group.append(t.replace("▁", ""))  # Add token to current_group
+            phonemes = thai_text_to_phonemes(token.replace("▁", ""))
+            current_phonemes.extend(phonemes.split())
 
-    if current_group:  # Append the last group if not empty
-        ph_groups.append(current_group)
+    if current_word:
+        word_phonemes = " ".join(current_phonemes)
+        phs.extend(word_phonemes.split())
+        word2ph.append(len(current_phonemes))
 
-    for group in ph_groups:
-        text = "".join(group)  # Concatenate tokens in the group to form the word or phrase
-        if text == '[UNK]':  # handle special cases like unknown tokens ("[UNK]")
-            phs.append('_')
-            word2ph.append(1)
-            continue
-        phonemes = thai_text_to_phonemes(text)
-        phone_len = len(phonemes.split())
-        word_len = len(group)
-        aaa = distribute_phone(phone_len, word_len)
-        assert len(aaa) == word_len
-        word2ph.extend(aaa)
-        phs.extend(phonemes.split())
+    # Distribute phonemes to match the number of tokens
+    distributed_word2ph = []
+    for i, group in enumerate(tokenized):
+        if group.startswith("▁"):
+            group = group.replace("▁", "")
+        if group in punctuation or group in pu_symbols:
+            distributed_word2ph.append(1)
+        else:
+            phonemes = thai_text_to_phonemes(group)
+            distributed_word2ph.append(len(phonemes.split()))
 
-    phones = ["_"] + phs + ["_"]
-    tones = [0 for _ in phones]
-    word2ph = [1] + word2ph + [1]
+    tone_markers = ['˥', '˦', '˧', '˨', '˩']
+    phones = ["_"] + [re.sub(f'[{"".join(tone_markers)}]', '', p) for p in phs] + ["_"]  # Remove tone markers from phones
+    tones = extract_tones(phs)  # Extract tones from the original phs list
+    word2ph = [1] + distributed_word2ph + [1]
 
     assert len(word2ph) == len(tokenized) + 2
 
     return phones, tones, word2ph
 
+
+def extract_tones(phones):
+    tones = []
+    tone_map = {
+        "˥": 5,  # High tone
+        "˦": 4,  # Rising tone
+        "˧": 3,  # Mid tone
+        "˨": 2,  # Falling tone
+        "˩": 1,  # Low tone
+    }
+
+    for phone in phones:
+        tone = 0
+        for marker, value in tone_map.items():
+            if marker in phone:
+                tone = value
+                break
+        tones.append(tone)
+
+    return tones
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
     from . import thai_bert
