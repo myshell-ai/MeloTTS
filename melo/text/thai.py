@@ -86,6 +86,7 @@ def g2p(norm_text):
     word2ph = []
     current_word = []
     current_phonemes = []
+
     for token in tokenized:
         print(f"Processing token: {token}")
         if token.startswith("▁"):
@@ -97,7 +98,13 @@ def g2p(norm_text):
                 word2ph.append(len(current_phonemes))
                 current_word = []
                 current_phonemes = []
-            current_word.append(token.replace("▁", ""))
+            if token == "▁":
+                phs.append("")
+            else:
+                current_word.append(token.replace("▁", ""))
+                phonemes = thai_text_to_phonemes(token.replace("▁", ""))
+                print(f"Phonemes: {phonemes}")
+                current_phonemes.extend(phonemes.split())
         else:
             current_word.append(token)
             if token in punctuation or token in pu_symbols:
