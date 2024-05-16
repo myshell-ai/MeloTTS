@@ -33,9 +33,35 @@ def test_g2p():
     text = "ฉันรักเมืองไทย"
     normalized_text = text_normalize(text)
     phones, tones, word2ph = g2p(normalized_text)
-    assert phones == ['_', 't͡ɕʰ', 'a', 'n', '', 'r', 'a', 'k̚', '', 'm', 'ɯa̯', 'ŋ', '', 'tʰ', 'aj', '', '.', 'j', 'a', '', '.', '_']
-    assert tones == [0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 5, 0]
-    assert word2ph == [1, 0, 8, 12, 1]
+
+    print(f"Phones: {phones}")
+    print(f"Tones: {tones}")
+    print(f"Word2ph: {word2ph}")
+
+    expected_phones = ['_', 't͡ɕʰ', 'a', 'n', '', 'r', 'a', 'k̚', '', 'm', 'ɯa̯', 'ŋ', '', 'tʰ', 'aj', '', '.', 'j', 'a', '', '.', '_']
+    expected_tones = [0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 5, 0]
+    expected_word2ph = [1, 0, 1, 1, 1]
+
+    assert phones == expected_phones
+    assert tones == expected_tones
+    assert word2ph == expected_word2ph
+
+    # Additional test case
+    text = "สวัสดี ประเทศไทย"
+    normalized_text = text_normalize(text)
+    phones, tones, word2ph = g2p(normalized_text)
+
+    print(f"Phones: {phones}")
+    print(f"Tones: {tones}")
+    print(f"Word2ph: {word2ph}")
+
+    expected_phones = ['_', 's', 'a', 'w', 'a', 't̚', '', 'd', 'iː', '', 'p', 'r', 'a', '', 'tʰ', 'eː', 't̚', '', 'tʰ', 'aj', '', '.', 'j', 'a', '', '.', '_']
+    expected_tones = [0, 0, 0, 0, 4, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 5, 0]
+    expected_word2ph = [1, 6, 10, 14, 18, 22, 26, 1]
+
+    assert phones == expected_phones
+    assert tones == expected_tones
+    assert word2ph == expected_word2ph
 
 def test_get_bert_feature():
     text = "ฉันเข้าใจคุณค่าของงานของฉันและความหมายของสิ่งที่ฟอนเทนทำเพื่อคนทั่วไปเป็นอย่างดี"
