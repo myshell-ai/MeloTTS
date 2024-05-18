@@ -45,8 +45,10 @@ with open("wiktionary-23-7-2022-clean.tsv", "r", encoding="utf-8") as f:
 def map_word_to_phonemes(word):
     print(f"Mapping word to phonemes: {word}")
     phonemes = thai_g2p_dict.get(word, list(word))
+    if not phonemes:
+        phonemes = list(word)
     print(f"Phonemes for the word: {phonemes}")
-    return phonemes
+    return " ".join(phonemes)
 
 def thai_text_to_phonemes(text):
     print(f"Original text: {text}")
@@ -59,9 +61,9 @@ def thai_text_to_phonemes(text):
         print(f"Processing word: {word}")
         word_phonemes = map_word_to_phonemes(word)
         print(f"Word phonemes: {word_phonemes}")
-        phonemes.extend(word_phonemes)
+        phonemes.append(word_phonemes)
     print(f"Final phonemes: {phonemes}")
-    return " ".join(phonemes)
+    return " . ".join(phonemes)
 
 def text_normalize(text):
     text = normalize(text)
@@ -78,99 +80,79 @@ def distribute_phone(n_phone, n_word):
 model_id = 'airesearch/wangchanberta-base-att-spm-uncased'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-def g2p(norm_text):
-    print(f"Normalized text: {norm_text}")
-    tokenized = tokenizer.tokenize(norm_text)
-    print(f"Tokenized text: {tokenized}")
-    phs = []
-    word2ph = []
-    current_word = []
-    current_phonemes = []
-
-    for token in tokenized:
-        print(f"Processing token: {token}")
-        if token.startswith("▁"):
-            print("Start of a new word")
-            if current_word:
-                word_phonemes = " ".join(current_phonemes)
-                print(f"Word phonemes: {word_phonemes}")
-                phs.extend(word_phonemes.split())
-                word2ph.append(len(current_phonemes))
-                current_word = []
-                current_phonemes = []
-            if token == "▁":
-                phs.append("")
-            else:
-                current_word.append(token.replace("▁", ""))
-                phonemes = thai_text_to_phonemes(token.replace("▁", ""))
-                print(f"Phonemes: {phonemes}")
-                current_phonemes.extend(phonemes.split())
-        else:
-            current_word.append(token)
-            if token in punctuation or token in pu_symbols:
-                print(f"Punctuation or symbol: {token}")
-                phs.append(token)
-                word2ph.append(1)
-            else:
-                phonemes = thai_text_to_phonemes(token.replace("▁", ""))
-                print(f"Phonemes: {phonemes}")
-                current_phonemes.extend(phonemes.split())
-
-    if current_word:
-        word_phonemes = " ".join(current_phonemes)
-        print(f"Word phonemes: {word_phonemes}")
-        phs.extend(word_phonemes.split())
-        word2ph.append(len(current_phonemes))
-
-    print(f"Final phs: {phs}")
-    print(f"Final word2ph: {word2ph}")
-
-    distributed_word2ph = []
-    for i, group in enumerate(tokenized):
-        if group.startswith("▁"):
-            group = group.replace("▁", "")
-            if group in punctuation or group in pu_symbols:
-                distributed_word2ph.append(1)
-            else:
-                phonemes = thai_text_to_phonemes(group)
-                distributed_word2ph.append(len(phonemes.split()))
-        else:
-            distributed_word2ph.append(1)  # Add 1 for spaces between words
-
-    tone_markers = ['˥', '˦', '˧', '˨', '˩']
-    phones = ["_"] + [re.sub(f'[{"".join(tone_markers)}]', '', p) for p in phs] + ["_"]
-    print(f"Phones: {phones}")
-
-    tones = extract_tones(phs)
-    print(f"Tones: {tones}")
-
-    word2ph = [1] + distributed_word2ph + [1]
-    print(f"Final word2ph: {word2ph}")
-
-    assert len(word2ph) == len(tokenized) + 2
-    return phones, tones, word2ph
+tone_map = {
+    "˧": 2,  # Mid tone
+    "˨˩": 1,  # Low tone
+    "˦˥": 3,  # Rising tone
+    "˩˩˦": 4,  # Falling tone
+    "˥˩": 5,  # High tone
+}
 
 def extract_tones(phs):
     tones = []
-    tone_map = {
-        "˥": 5,  # High tone
-        "˦": 4,  # Rising tone
-        "˧": 3,  # Mid tone
-        "˨": 2,  # Falling tone
-        "˩": 1,  # Low tone
-    }
     for ph in phs:
-        tone_found = False
-        for marker, value in tone_map.items():
-            if marker in ph:
-                tones.append(value)
-                tone_found = True
-                break
-        if not tone_found:
-            tones.append(0)
+        if ph in tone_map:
+            tones = [tone_map[ph]] * (len(phs) - 1)
+            break
+    if not tones:
+        tones = [0] * len(phs)
     return tones
 
+def g2p(norm_text):
+    print(f"Normalized text: {norm_text}")
+    words = word_tokenize(norm_text, engine="newmm")
+    print(f"Tokenized words: {words}")
+    phonemes_and_tones = []
 
+    for word in words:
+        print(f"Processing word: {word}")
+        phonemes = thai_text_to_phonemes(word)
+        print(f"Phonemes for the word: {phonemes}")
+        phoneme_groups = phonemes.split(".")
+        print(f"Phoneme groups: {phoneme_groups}")
+        word_phonemes = []
+        word_tones = []
+
+        for group in phoneme_groups:
+            print(f"Processing phoneme group: {group}")
+            group_phonemes = [ph for ph in group.split() if ph not in tone_map]
+            group_tones = extract_tones(group.split())
+            print(f"Group phonemes: {group_phonemes}")
+            print(f"Group tones: {group_tones}")
+            word_phonemes.extend(group_phonemes)
+            word_tones.extend(group_tones)
+
+        print(f"Word phonemes: {word_phonemes}")
+        print(f"Word tones: {word_tones}")
+        phonemes_and_tones.append((word_phonemes, word_tones))
+
+    joined_text = " ".join(words)
+    print(f"Joined text: {joined_text}")
+    bert_tokens = tokenizer.tokenize(joined_text)
+    print(f"BERT tokens: {bert_tokens}")
+
+    phs = []
+    tones = []
+    word2ph = []
+
+    for word, (word_phonemes, word_tones) in zip(words, phonemes_and_tones):
+        print(f"Aligning word: {word}")
+        print(f"Word phonemes: {word_phonemes}")
+        print(f"Word tones: {word_tones}")
+        phs.extend(word_phonemes)
+        tones.extend(word_tones)
+        word2ph.append(len(word_phonemes))
+
+    phs = ["_"] + phs + ["_"]
+    tones = [0] + tones + [0]
+    word2ph = [1] + word2ph + [1]
+
+    print(f"Final phs: {phs}")
+    print(f"Final tones: {tones}")
+    print(f"Final word2ph: {word2ph}")
+
+    assert len(word2ph) == len(words) + 2
+    return phs, tones, word2ph
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
     from . import thai_bert
