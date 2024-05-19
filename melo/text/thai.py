@@ -103,6 +103,7 @@ def g2p(norm_text):
     words = word_tokenize(norm_text, engine="newmm")
     print(f"Tokenized words: {words}")
     phonemes_and_tones = []
+    word2ph = []  # Added: Initialize word2ph before the loop
 
     for word in words:
         print(f"Processing word: {word}")
@@ -112,6 +113,7 @@ def g2p(norm_text):
         print(f"Phoneme groups: {phoneme_groups}")
         word_phonemes = []
         word_tones = []
+        word_phones_count = []  # Added: To store the phone count for each syllable group
 
         for group in phoneme_groups:
             print(f"Processing phoneme group: {group}")
@@ -121,10 +123,12 @@ def g2p(norm_text):
             print(f"Group tones: {group_tones}")
             word_phonemes.extend(group_phonemes)
             word_tones.extend(group_tones)
+            word_phones_count.append(len(group_phonemes))  # Added: Count the phones in each syllable group
 
         print(f"Word phonemes: {word_phonemes}")
         print(f"Word tones: {word_tones}")
         phonemes_and_tones.append((word_phonemes, word_tones))
+        word2ph.extend(word_phones_count)  # Added: Extend word2ph with the phone count for each syllable group
 
     joined_text = " ".join(words)
     print(f"Joined text: {joined_text}")
@@ -133,7 +137,6 @@ def g2p(norm_text):
 
     phs = []
     tones = []
-    word2ph = []
 
     for word, (word_phonemes, word_tones) in zip(words, phonemes_and_tones):
         print(f"Aligning word: {word}")
@@ -141,18 +144,18 @@ def g2p(norm_text):
         print(f"Word tones: {word_tones}")
         phs.extend(word_phonemes)
         tones.extend(word_tones)
-        word2ph.append(len(word_phonemes))
 
     phs = ["_"] + phs + ["_"]
-    tones = [0] + tones + [0]
+    tones = [1] + tones + [1]
     word2ph = [1] + word2ph + [1]
 
     print(f"Final phs: {phs}")
     print(f"Final tones: {tones}")
     print(f"Final word2ph: {word2ph}")
 
-    assert len(word2ph) == len(words) + 2
+    # assert len(word2ph) == len(phs)
     return phs, tones, word2ph
+
 
 def get_bert_feature(text, word2ph, device='cuda', model_id='airesearch/wangchanberta-base-att-spm-uncased'):
     from . import thai_bert

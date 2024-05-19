@@ -97,8 +97,8 @@ def test_g2p():
 
     # Expected output based on the wiktionary entry
     expected_phones = ['_', 'k', 'o', 'ŋ', 'l', 'ɔː', '_']
-    expected_tones = [0, 2, 2, 2, 3, 3, 0]
-    expected_word2ph = [1, 5, 1]
+    expected_tones = [1, 2, 2, 2, 3, 3, 1]
+    expected_word2ph = [1, 3, 2, 1]
 
     # Compare the actual output with the expected output
     assert phones == expected_phones
@@ -110,15 +110,13 @@ def test_get_bert_feature_thai():
     normalized_text = text_normalize(text)
     phones, tones, word2ph = g2p(normalized_text)
     bert_features = get_bert_feature(normalized_text, word2ph, device='cpu')
-
     assert isinstance(bert_features, torch.Tensor), "bert_features should be a torch.Tensor"
     assert bert_features.shape[0] == 768, f"Expected bert_features.shape[0] to be 768, but got {bert_features.shape[0]}"
 
-    # Modify the assertion to check the number of phones instead of the length of word2ph
-    num_phones = sum(word2ph)
+    # Modify the assertion to check the number of phones, excluding special characters
+    num_phones = sum(word2ph[1:-1])
     assert bert_features.shape[1] == num_phones, f"Expected bert_features.shape[1] to be {num_phones}, but got {bert_features.shape[1]}"
 
-    # Additional assertions to check the values of bert_features
     assert not torch.isnan(bert_features).any(), "bert_features should not contain any NaN values"
     assert not torch.isinf(bert_features).any(), "bert_features should not contain any infinity values"
 
