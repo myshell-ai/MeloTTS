@@ -114,7 +114,7 @@ def test_get_bert_feature_thai():
     assert bert_features.shape[0] == 768, f"Expected bert_features.shape[0] to be 768, but got {bert_features.shape[0]}"
 
     # Modify the assertion to check the number of phones, excluding special characters
-    num_phones = sum(word2ph[1:-1])
+    num_phones = sum(word2ph)
     assert bert_features.shape[1] == num_phones, f"Expected bert_features.shape[1] to be {num_phones}, but got {bert_features.shape[1]}"
 
     assert not torch.isnan(bert_features).any(), "bert_features should not contain any NaN values"
