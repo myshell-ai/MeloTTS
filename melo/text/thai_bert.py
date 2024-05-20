@@ -40,7 +40,7 @@ def get_bert_feature(text, word2ph, device=None, model_id='airesearch/wangchanbe
         res = model(**inputs, output_hidden_states=True)
         res = torch.cat(res["hidden_states"][-3:-2], -1)[0].cpu()
 
-        word2phone = word2ph[1:-1]  # Remove the first and last elements (padding)
+        word2phone = word2ph
         phone_level_feature = []
 
         for i in range(len(word2phone)):
