@@ -83,35 +83,24 @@ tone_map = {
     "˥˩": 5,  # High tone
 }
 
-# def extract_tones(phs):
-#     tones = []
-#     for ph in phs:
-#         if ph in tone_map:
-#             tones = [tone_map[ph]] * (len(phs) - 1)
-#             break
-#     if not tones:
-#         tones = [0] * len(phs)
-#     return tones
-
-# def extract_tones(phs):
-#     tones = []
-#     for ph in phs:
-#         if ph in tone_map:
-#             tones.append(tone_map[ph])
-#         else:
-#             tones.append(2)  # Default tone value when no tone symbol is found
-#     return tones
 
 def extract_tones(phs):
     tones = []
     tone_value = 2  # Default tone value when no tone symbol is found
+    last_item = phs[-1]
 
     for ph in phs:
         if ph in tone_map:
             tone_value = tone_map[ph]
 
-    # Assign the tone value to each phoneme excluding the tone marker
-    tones = [tone_value] * (len(phs) - 1)
+    # Assign the tone value to each phoneme excluding the tone marker if there is one
+    if last_item in tone_map:
+        tones = [tone_value] * (len(phs) - 1)
+    else:
+        tones = [tone_value] * (len(phs))
+
+    # print("=======> PHS: ",  phs)
+    # print("=======> TONES: ",  tones)
 
     return tones
 
@@ -182,6 +171,9 @@ def g2p(norm_text, pad_start_end=True):
 
         phonemes = thai_text_to_phonemes(word)
         phoneme_groups = phonemes.split(".")
+        # Keep only non-empty groups for cases with a trailing dot
+        # i.e 'b ɤː ˧ . tʰ oː ˧ . r a ˦˥ .'
+        phoneme_groups = [group for group in phoneme_groups if group.strip()]
 
         word_phonemes = []
         word_tones = []
