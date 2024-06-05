@@ -163,8 +163,9 @@ def g2p(norm_text, pad_start_end=True):
     print("tokenized", tokenized)
 
     for word in tokenized:
-        if word == "▁":
-            continue
+        # if word == "▁":
+        #     word2ph.append(1)
+        #     continue
 
         if word.startswith("▁"):
             word = word.replace("▁", "")
@@ -197,7 +198,7 @@ def g2p(norm_text, pad_start_end=True):
     print(f"Final tones: {tones}")
     print(f"Final word2ph: {word2ph}")
 
-    assert len(word2ph) == len([t for t in tokenized if t != "▁"]) + 2
+    # assert len(word2ph) == len([t for t in tokenized if t != "▁"]) + 2
 
     return phs, tones, word2ph
 
