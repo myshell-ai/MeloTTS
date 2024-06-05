@@ -56,7 +56,7 @@ def run():
     )  # Use torchrun instead of mp.spawn
     rank = dist.get_rank()
     n_gpus = dist.get_world_size()
-    
+
     torch.manual_seed(hps.train.seed)
     torch.cuda.set_device(rank)
     global global_step
@@ -165,7 +165,7 @@ def run():
         optim_dur_disc = None
     net_g = DDP(net_g, device_ids=[rank], find_unused_parameters=True)
     net_d = DDP(net_d, device_ids=[rank], find_unused_parameters=True)
-    
+
     pretrain_G, pretrain_D, pretrain_dur = load_pretrain_model()
     hps.pretrain_G = hps.pretrain_G or pretrain_G
     hps.pretrain_D = hps.pretrain_D or pretrain_D
@@ -196,7 +196,7 @@ def run():
                     None,
                     skip_optimizer=True
                 )
-                
+
     try:
         if net_dur_disc is not None:
             _, _, dur_resume_lr, epoch_str = utils.load_checkpoint(
@@ -414,7 +414,8 @@ def train_and_evaluate(
         optim_d.zero_grad()
         scaler.scale(loss_disc_all).backward()
         scaler.unscale_(optim_d)
-        grad_norm_d = commons.clip_grad_value_(net_d.parameters(), None)
+        grad_norm_d = commons.clip_grad_value_(net_d.parameters(), 200)
+        grad_norm_g = commons.clip_grad_value_(net_g.parameters(), 500)
         scaler.step(optim_d)
 
         with autocast(enabled=hps.train.fp16_run):

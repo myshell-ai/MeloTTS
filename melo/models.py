@@ -830,6 +830,23 @@ class SynthesizerTrn(nn.Module):
             num_languages=num_languages,
             num_tones=num_tones,
         )
+        self.enc_p = TextEncoder(
+            219,  # Initialize with the original symbol size
+            inter_channels,
+            hidden_channels,
+            filter_channels,
+            n_heads,
+            n_layers,
+            kernel_size,
+            p_dropout,
+            gin_channels=self.enc_gin_channels,
+            num_languages=num_languages,
+            num_tones=num_tones,
+        )
+        if n_vocab != 219:
+            old_embeddings = self.enc_p.emb
+            new_num_tokens = n_vocab
+            self.enc_p.emb = self.get_resized_embeddings(old_embeddings, new_num_tokens)
         self.dec = Generator(
             inter_channels,
             resblock,
@@ -884,6 +901,23 @@ class SynthesizerTrn(nn.Module):
             self.ref_enc = ReferenceEncoder(spec_channels, gin_channels, layernorm=norm_refenc)
         self.use_vc = use_vc
 
+    def get_resized_embeddings(self, old_embeddings, new_num_tokens):
+        old_num_tokens, old_embedding_dim = old_embeddings.weight.size()
+        if old_num_tokens == new_num_tokens:
+            return old_embeddings
+
+        if not isinstance(old_embeddings, nn.Embedding):
+            raise TypeError(
+                f"Old embeddings are of type {type(old_embeddings)}, which is not an instance of {nn.Embedding}. "
+                f"You should either use a different resize function or make sure that `old_embeddings` are an instance of {nn.Embedding}."
+            )
+
+        new_embeddings = nn.Embedding(new_num_tokens, old_embedding_dim).to(
+            device=old_embeddings.weight.device, dtype=old_embeddings.weight.dtype
+        )
+        new_embeddings.weight.data[:old_num_tokens, :] = old_embeddings.weight.data[:old_num_tokens, :]
+
+        return new_embeddings
 
     def forward(self, x, x_lengths, y, y_lengths, sid, tone, language, bert, ja_bert):
         if self.n_speakers > 0:
@@ -998,7 +1032,7 @@ class SynthesizerTrn(nn.Module):
             sdp_ratio
         ) + self.dp(x, x_mask, g=g) * (1 - sdp_ratio)
         w = torch.exp(logw) * x_mask * length_scale
-        
+
         w_ceil = torch.ceil(w)
         y_lengths = torch.clamp_min(torch.sum(w_ceil, [1, 2]), 1).long()
         y_mask = torch.unsqueeze(commons.sequence_mask(y_lengths, None), 1).to(
@@ -1020,7 +1054,7 @@ class SynthesizerTrn(nn.Module):
         # print('max/min of o:', o.max(), o.min())
         return o, attn, y_mask, (z, z_p, m_p, logs_p)
 
-    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):        
+    def voice_conversion(self, y, y_lengths, sid_src, sid_tgt, tau=1.0):
         g_src = sid_src
         g_tgt = sid_tgt
         z, m_q, logs_q, y_mask = self.enc_q(y, y_lengths, g=g_src, tau=tau)

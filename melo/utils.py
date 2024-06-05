@@ -42,7 +42,7 @@ def get_text_for_tts_infer(text, language_str, hps, device, symbol_to_id=None):
         if language_str == "ZH":
             bert = bert
             ja_bert = torch.zeros(768, len(phone))
-        elif language_str in ["JP", "EN", "ZH_MIX_EN", 'KR', 'SP', 'ES', 'FR', 'DE', 'RU']:
+        elif language_str in ["JP", "EN", "ZH_MIX_EN", 'KR', 'SP', 'ES', 'FR', 'DE', 'RU', 'TH']:
             ja_bert = bert
             bert = torch.zeros(1024, len(phone))
         else:
