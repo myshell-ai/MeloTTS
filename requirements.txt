@@ -1,7 +1,6 @@
 txtsplit
 torch
 torchaudio
-cached_path
 transformers==4.27.4
 mecab-python3==1.0.5
 num2words==0.5.12
