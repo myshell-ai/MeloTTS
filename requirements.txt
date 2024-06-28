@@ -1,7 +1,6 @@
 txtsplit
 torch
 torchaudio
-cached_path
 transformers==4.27.4
 mecab-python3==1.0.5
 num2words==0.5.12
@@ -28,3 +27,5 @@ langid==1.1.6
 tqdm
 tensorboard==2.16.2
 loguru==0.7.2
+botocore>=1.34.98
+cached_path>=1.6.2
