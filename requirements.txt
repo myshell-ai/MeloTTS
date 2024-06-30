@@ -3,11 +3,10 @@ torch
 torchaudio
 cached_path
 transformers==4.27.4
-mecab-python3==1.0.5
+mecab-python3==1.0.9
 num2words==0.5.12
 unidic_lite==1.0.8
 unidic==1.1.0
-mecab-python3==1.0.5
 pykakasi==2.2.1
 fugashi==1.3.0
 g2p_en==2.1.0
