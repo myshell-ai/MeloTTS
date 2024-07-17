@@ -18,6 +18,11 @@ python -m unidic download
 ```
 If you encountered issues in macOS install, try the [Docker Install](#docker-install)
 
+#### System requirements
+On Debian 12, you may need to install the following packages:
+- libmecab-dev
+- python3-mecab
+
 ### Docker Install
 To avoid compatibility issues, for Windows users and some macOS users, we suggest to run via Docker. Ensure that [you have Docker installed](https://docs.docker.com/engine/install/).
 
