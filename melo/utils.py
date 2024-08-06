@@ -13,11 +13,29 @@ from melo.text import cleaned_text_to_sequence, get_bert
 from melo.text.cleaner import clean_text
 from melo import commons
 
+import soundfile as sf
+import pyloudnorm as pyln
+
 MATPLOTLIB_FLAG = False
 
 logger = logging.getLogger(__name__)
 
+def fix_loudness(input,output):
 
+    # 加载音频文件
+    data, rate = sf.read(input)
+
+    # 峰值归一化至 -1 dB
+    peak_normalized_audio = pyln.normalize.peak(data, -1.0)
+
+    # 测量响度
+    meter = pyln.Meter(rate)
+    loudness = meter.integrated_loudness(data)
+
+    # 响度归一化至 -12 dB LUFS
+    loudness_normalized_audio = pyln.normalize.loudness(data, loudness, -12.0)
+
+    sf.write(output, loudness_normalized_audio, rate)
 
 def get_text_for_tts_infer(text, language_str, hps, device, symbol_to_id=None):
     norm_text, phone, tone, word2ph = clean_text(text, language_str)
