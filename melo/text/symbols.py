@@ -459,6 +459,8 @@ th_symbols = [
     'ə',
     'æː',
     'i̯',
+    '▁',
+    'am'
 ]
 num_th_tones = 5
 

@@ -17,3 +17,6 @@ do
 done
 sleep 30
 done
+
+
+torchrun --nproc_per_node=4 --master_port=10902 train.py --c /workspace/MeloTTS/melo/data/thai/config.json --model thai

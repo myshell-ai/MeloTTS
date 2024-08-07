@@ -5,7 +5,7 @@ import sys
 models = {}
 tokenizers = {}
 
-def get_bert_feature(text, word2ph, device=None, model_id='airesearch/wangchanberta-base-att-spm-uncased'):
+def get_bert_feature(text, word2ph, device=None, model_id='clicknext/phayathaibert'):
     global model
     global tokenizer
 
