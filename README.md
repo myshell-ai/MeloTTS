@@ -4,7 +4,7 @@
 </div>
 
 ## Introduction
-MeloTTS is a **high-quality multi-lingual** text-to-speech library by [MyShell.ai](https://myshell.ai). Supported languages include:
+MeloTTS is a **high-quality multi-lingual** text-to-speech library by [MIT](https://www.mit.edu/) and [MyShell.ai](https://myshell.ai). Supported languages include:
 
 | Language | Example |
 | --- | --- |
