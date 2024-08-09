@@ -1,16 +1,36 @@
-import pickle
 import os
+import pickle
 import re
+import urllib.request
+from typing import Dict
+
 from g2p_en import G2p
+from transformers import AutoTokenizer
 
 from . import symbols
-
 from .english_utils.abbreviations import expand_abbreviations
-from .english_utils.time_norm import expand_time_english
 from .english_utils.number_norm import normalize_numbers
+from .english_utils.time_norm import expand_time_english
 from .japanese import distribute_phone
 
-from transformers import AutoTokenizer
+
+class CMUDict:
+    def __init__(self, url: str):
+        if url == "":
+            url = "https://raw.githubusercontent.com/cmusphinx/cmudict/master/cmudict.dict"
+        self.url: str = url
+
+    def __call__(self) -> Dict[str, str]:
+        r: Dict[str, str] = {}
+        with urllib.request.urlopen(self.url) as d:
+            b: str = d.read().decode("utf-8")
+            for line in b.strip().split("\n"):
+                word: str = line.split(" ")[0]
+                p: str = line.strip(word).upper().strip()
+                w: str = word.upper().strip()
+                r[w] = p
+        return r
+
 
 current_file_path = os.path.dirname(__file__)
 CMU_DICT_PATH = os.path.join(current_file_path, "cmudict.rep")
@@ -115,9 +135,19 @@ def post_replace_ph(ph):
     return ph
 
 
+def download_cmudict(url: str, download_path: str):
+    c: CMUDict = CMUDict(url=url)  # noqa
+    d = c()
+    with open(download_path, "w", encoding="utf-8") as o:
+        for k, v in d.items():
+            o.write(f"{k}  {v}\n")
+
+
 def read_dict():
     g2p_dict = {}
     start_line = 49
+    if not os.path.exists(CMU_DICT_PATH):
+        download_cmudict(url="", download_path=CMU_DICT_PATH)
     with open(CMU_DICT_PATH) as f:
         line = f.readline()
         line_index = 1
@@ -185,8 +215,11 @@ def text_normalize(text):
     text = expand_abbreviations(text)
     return text
 
+
 model_id = 'bert-base-uncased'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+
 def g2p_old(text):
     tokenized = tokenizer.tokenize(text)
     # import pdb; pdb.set_trace()
@@ -214,6 +247,7 @@ def g2p_old(text):
     phones = [post_replace_ph(i) for i in phones]
     return phones, tones, word2ph
 
+
 def g2p(text, pad_start_end=True, tokenized=None):
     if tokenized is None:
         tokenized = tokenizer.tokenize(text)
@@ -225,7 +259,7 @@ def g2p(text, pad_start_end=True, tokenized=None):
             ph_groups.append([t])
         else:
             ph_groups[-1].append(t.replace("#", ""))
-    
+
     phones = []
     tones = []
     word2ph = []
@@ -259,10 +293,12 @@ def g2p(text, pad_start_end=True, tokenized=None):
         word2ph = [1] + word2ph + [1]
     return phones, tones, word2ph
 
+
 def get_bert_feature(text, word2ph, device=None):
     from text import english_bert
 
     return english_bert.get_bert_feature(text, word2ph, device=device)
+
 
 if __name__ == "__main__":
     # print(get_dict())
@@ -271,9 +307,10 @@ if __name__ == "__main__":
     text = "In this paper, we propose 1 DSPGAN, a N-F-T GAN-based universal vocoder."
     text = text_normalize(text)
     phones, tones, word2ph = g2p(text)
-    import pdb; pdb.set_trace()
+    import pdb
+    pdb.set_trace()
     bert = get_bert_feature(text, word2ph)
-    
+
     print(phones, tones, word2ph, bert.shape)
 
     # all_phones = set()
