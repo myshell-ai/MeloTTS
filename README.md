@@ -46,7 +46,7 @@ If you find this work useful, please consider contributing to this repo.
 
 - [Wenliang Zhao](https://wl-zhao.github.io) at Tsinghua University
 - [Xumin Yu](https://yuxumin.github.io) at Tsinghua University
-- [Zengyi Qin](https://www.qinzy.tech) at MIT and MyShell
+- [Zengyi Qin](https://www.qinzy.tech) (project lead) at MIT and MyShell
 
 **Citation**
 ```
