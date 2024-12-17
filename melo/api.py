@@ -80,10 +80,10 @@ class TTS(nn.Module):
             print(" > ===========================")
         return texts
 
-    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, format=None, position=None, quiet=False,):
+    def tts_iter(self, text, speaker_id, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, position=None, quiet=False,):
         language = self.language
         texts = self.split_sentences_into_pieces(text, language, quiet)
-        audio_list = []
+
         if pbar:
             tx = pbar(texts)
         else:
@@ -121,10 +121,24 @@ class TTS(nn.Module):
                         length_scale=1. / speed,
                     )[0][0, 0].data.cpu().float().numpy()
                 del x_tst, tones, lang_ids, bert, ja_bert, x_tst_lengths, speakers
-                # 
-            audio_list.append(audio)
+                
+                
+
+                audio_segments = []
+                audio_segments += audio.reshape(-1).tolist()
+                audio_segments += [0] * int((self.hps.data.sampling_rate * 0.05) / speed)
+                audio_segments = np.array(audio_segments).astype(np.float32)
+                
+                yield audio_segments
+            
         torch.cuda.empty_cache()
-        audio = self.audio_numpy_concat(audio_list, sr=self.hps.data.sampling_rate, speed=speed)
+
+    def tts_to_file(self, text, speaker_id, output_path=None, sdp_ratio=0.2, noise_scale=0.6, noise_scale_w=0.8, speed=1.0, pbar=None, format=None, position=None, quiet=False,):
+        audio_list = []
+        for audio in self.tts_iter(text, speaker_id, sdp_ratio, noise_scale, noise_scale_w, speed, pbar, position, quiet):
+            audio_list.append(audio)
+
+        audio = np.concatenate(audio_list)
 
         if output_path is None:
             return audio
