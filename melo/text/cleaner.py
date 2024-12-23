@@ -1,9 +1,9 @@
-from . import chinese, japanese, english, chinese_mix, korean, french, spanish
+from . import chinese, japanese, english, chinese_mix, korean, french, spanish, turkish
 from . import cleaned_text_to_sequence
 import copy
 
 language_module_map = {"ZH": chinese, "JP": japanese, "EN": english, 'ZH_MIX_EN': chinese_mix, 'KR': korean,
-                    'FR': french, 'SP': spanish, 'ES': spanish}
+                    'FR': french, 'SP': spanish, 'ES': spanish, "TR": turkish}
 
 
 def clean_text(text, language):
