@@ -1,6 +1,7 @@
 <div align="center">
   <div>&nbsp;</div>
-  <img src="logo.png" width="300"/> 
+  <img src="logo.png" width="300"/> <br>
+  <a href="https://trendshift.io/repositories/8133" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8133" alt="myshell-ai%2FMeloTTS | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 
 ## Introduction
