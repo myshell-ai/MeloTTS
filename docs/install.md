@@ -31,12 +31,18 @@ docker build -t melotts .
 ```
 
 **Run Docker**
+Run as a default Gradio app:
 ```bash
 docker run -it -p 8888:8888 melotts
 ```
 If your local machine has GPU, then you can choose to run:
 ```bash
 docker run --gpus all -it -p 8888:8888 melotts
+```
+
+Run as a FastAPI streaming server:
+```bash
+docker run --gpus all -it -p 8888:8888 -e APP_MODE=api melotts
 ```
 Then open [http://localhost:8888](http://localhost:8888) in your browser to use the app.
 
@@ -49,6 +55,44 @@ The WebUI supports muliple languages and voices. First, follow the installation 
 ```bash
 melo-ui
 # Or: python melo/app.py
+```
+
+### Streaming API
+One application for the streaming API could be for an AI assistant. The following block of code provides some guidance on how to read from the stream:
+```python
+import requests
+import subprocess
+
+def stream_ffplay(audio_stream):
+  ffplay_cmd = ["ffplay", "-nodisp", "-probesize", "2048", "-autoexit", "-"]
+  ffplay_proc = subprocess.Popen(ffplay_cmd, stdin=subprocess.PIPE)
+
+  for chunk in audio_stream:
+      if chunk is not None:
+          ffplay_proc.stdin.write(chunk)
+
+  # close on finish
+  ffplay_proc.stdin.close()
+  ffplay_proc.wait()
+
+def tts(text, speaker='EN-US', language='EN', speed=1):
+  res = requests.post(
+          "http://localhost:8888/stream",
+          json={
+            "text": text,
+            "language": language,
+            "speed": speed,
+            "speaker": speaker
+          },
+          stream=True,
+      )
+  for chunk in res.iter_content(chunk_size=512):
+        if chunk:
+            yield chunk
+
+stream_ffplay(
+  tts("Ahoy there matey! How goes it?")
+)
 ```
 
 ### CLI
