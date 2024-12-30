@@ -2,7 +2,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 import sys
 
-model_id = 'dbmdz/bert-base-turkish-cased'
+model_id = 'ytu-ce-cosmos/turkish-base-bert-uncased'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = None
 
