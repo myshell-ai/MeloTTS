@@ -13,6 +13,7 @@ def distribute_phone(n_phone, n_word):
 def text_normalize(text):
     # Basic Turkish text normalization
     # Convert to lowercase while preserving Turkish characters
+    text = text.replace("I", "ı").lower()
     text = text.lower()
     # Replace multiple spaces with single space
     text = re.sub(r'\s+', ' ', text)
@@ -66,7 +67,7 @@ def tr_to_ipa(text):
     return ''.join(tr_to_ipa_dict.get(char, char) for char in text.lower())
 
 # Initialize the Turkish BERT tokenizer
-model_id = 'dbmdz/bert-base-turkish-cased'
+model_id = 'ytu-ce-cosmos/turkish-base-bert-uncased.'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 
 def g2p(text, pad_start_end=True, tokenized=None):
