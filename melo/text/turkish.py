@@ -67,7 +67,7 @@ def tr_to_ipa(text):
     return ''.join(tr_to_ipa_dict.get(char, char) for char in text.lower())
 
 # Initialize the Turkish BERT tokenizer
-model_id = 'ytu-ce-cosmos/turkish-base-bert-uncased.'
+model_id = 'ytu-ce-cosmos/turkish-base-bert-uncased'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 
 def g2p(text, pad_start_end=True, tokenized=None):
