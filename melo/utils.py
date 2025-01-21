@@ -17,7 +17,25 @@ MATPLOTLIB_FLAG = False
 
 logger = logging.getLogger(__name__)
 
+def normalize_loudness(audio):
+    max_val = np.max(np.abs(audio))
+    if max_val == 0:
+        return audio
+    scale_factor = (1 - 1e-6) / max_val
+    normalized_audio = audio * scale_factor
 
+    if False:
+        print(f'--- normalize ---')
+        print(f"Before normalization:")
+        print(f"  Min value: {np.min(audio)}")
+        print(f"  Max value: {np.max(audio)}")
+        print(f"  Length: {len(audio)}")
+        print(f"After normalization:")
+        print(f"  Min value: {np.min(normalized_audio)}")
+        print(f"  Max value: {np.max(normalized_audio)}")
+        print(f"  Length: {len(normalized_audio)}")
+
+    return normalized_audio
 
 def get_text_for_tts_infer(text, language_str, hps, device, symbol_to_id=None):
     norm_text, phone, tone, word2ph = clean_text(text, language_str)
