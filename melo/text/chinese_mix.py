@@ -243,7 +243,9 @@ if __name__ == "__main__":
     text = text_normalize(text)
     print(text)
     phones, tones, word2ph = g2p(text, impl='v2')
-    bert = get_bert_feature(text, word2ph, device='cuda:0')
+    if torch.cuda.is_available(): device = "cuda:0"
+    if torch.xpu.is_available(): device = "xpu"
+    bert = get_bert_feature(text, word2ph, device=device)
     print(phones)
     import pdb; pdb.set_trace()
 

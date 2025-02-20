@@ -14,6 +14,8 @@ The repo is developed and tested on `Ubuntu 20.04` and `Python 3.9`.
 git clone https://github.com/myshell-ai/MeloTTS.git
 cd MeloTTS
 pip install -e .
+# use pip below for Intel XPU
+# pip install -r requirements-intel.txt
 python -m unidic download
 ```
 If you encountered issues in macOS install, try the [Docker Install](#docker-install)
@@ -112,7 +114,7 @@ from melo.api import TTS
 speed = 1.0
 
 # CPU is sufficient for real-time inference.
-# You can set it manually to 'cpu' or 'cuda' or 'cuda:0' or 'mps'
+# You can set it manually to 'cpu' or 'cuda' or 'cuda:0' or 'mps' or 'xpu'
 device = 'auto' # Will automatically use GPU if available
 
 # English 

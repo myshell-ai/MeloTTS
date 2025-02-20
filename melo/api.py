@@ -28,9 +28,12 @@ class TTS(nn.Module):
         if device == 'auto':
             device = 'cpu'
             if torch.cuda.is_available(): device = 'cuda'
+            if torch.xpu.is_available(): device = 'xpu'
             if torch.backends.mps.is_available(): device = 'mps'
         if 'cuda' in device:
             assert torch.cuda.is_available()
+        if 'xpu' in device:
+            assert torch.xpu.is_available()
 
         # config_path = 
         hps = load_or_download_config(language, use_hf=use_hf, config_path=config_path)
@@ -123,7 +126,8 @@ class TTS(nn.Module):
                 del x_tst, tones, lang_ids, bert, ja_bert, x_tst_lengths, speakers
                 # 
             audio_list.append(audio)
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available(): torch.cuda.empty_cache()
+        if torch.xpu.is_available(): torch.xpu.empty_cache()
         audio = self.audio_numpy_concat(audio_list, sr=self.hps.data.sampling_rate, speed=speed)
 
         if output_path is None:

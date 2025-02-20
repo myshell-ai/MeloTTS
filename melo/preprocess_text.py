@@ -45,6 +45,9 @@ def main(
 
     if cleaned_path is None:
         cleaned_path = metadata + ".cleaned"
+        
+    if torch.cuda.is_available(): device = "cuda:0"
+    if torch.xpu.is_available(): device = "xpu"
 
     if clean:
         out_file = open(cleaned_path, "w", encoding="utf-8")
@@ -52,7 +55,7 @@ def main(
         for line in tqdm(open(metadata, encoding="utf-8").readlines()):
             try:
                 utt, spk, language, text = line.strip().split("|")
-                norm_text, phones, tones, word2ph, bert = clean_text_bert(text, language, device='cuda:0')
+                norm_text, phones, tones, word2ph, bert = clean_text_bert(text, language, device=device)
                 for ph in phones:
                     if ph not in symbols and ph not in new_symbols:
                         new_symbols.append(ph)
