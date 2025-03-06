@@ -27,7 +27,7 @@ def get_bert_feature(text, word2ph, device=None, model_id='hfl/chinese-roberta-w
         device = "mps"
     if not device:
         if torch.cuda.is_available(): device = "cuda"
-        if torch.xpu.is_available(): device = "xpu"
+        elif torch.xpu.is_available(): device = "xpu"
 
     with torch.no_grad():
         inputs = tokenizer(text, return_tensors="pt")

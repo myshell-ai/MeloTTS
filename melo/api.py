@@ -28,8 +28,8 @@ class TTS(nn.Module):
         if device == 'auto':
             device = 'cpu'
             if torch.cuda.is_available(): device = 'cuda'
-            if torch.xpu.is_available(): device = 'xpu'
-            if torch.backends.mps.is_available(): device = 'mps'
+            elif torch.xpu.is_available(): device = 'xpu'
+            elif torch.backends.mps.is_available(): device = 'mps'
         if 'cuda' in device:
             assert torch.cuda.is_available()
         if 'xpu' in device:

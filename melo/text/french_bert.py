@@ -16,7 +16,7 @@ def get_bert_feature(text, word2ph, device=None):
         device = "mps"
     if not device:
         if torch.cuda.is_available(): device = "cuda"
-        if torch.xpu.is_available(): device = "xpu"
+        elif torch.xpu.is_available(): device = "xpu"
     if model is None:
         model = AutoModelForMaskedLM.from_pretrained(model_id).to(
             device

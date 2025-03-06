@@ -47,7 +47,7 @@ def main(
         cleaned_path = metadata + ".cleaned"
         
     if torch.cuda.is_available(): device = "cuda:0"
-    if torch.xpu.is_available(): device = "xpu"
+    elif torch.xpu.is_available(): device = "xpu"
 
     if clean:
         out_file = open(cleaned_path, "w", encoding="utf-8")
