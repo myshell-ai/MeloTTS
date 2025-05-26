@@ -30,6 +30,60 @@ Some other features include:
 
 The Python API and model cards can be found in [this repo](https://github.com/myshell-ai/MeloTTS/blob/main/docs/install.md#python-api) or on [HuggingFace](https://huggingface.co/myshell-ai).
 
+## ONNX Inference Acceleration
+
+MeloTTS supports ONNX (Open Neural Network Exchange) for potentially faster inference, especially on CPU, and for easier deployment across different platforms.
+
+### Installation for ONNX
+
+The necessary dependencies for ONNX inference (`onnx`, `onnxruntime`) are included in the `requirements.txt` file. You can install them along with other dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+If you have a CUDA-compatible GPU and want to leverage GPU acceleration for ONNX, you might consider installing the GPU-enabled version of `onnxruntime`. After installing the base requirements, you can do:
+
+```bash
+pip uninstall onnxruntime
+pip install onnxruntime-gpu
+```
+Make sure your CUDA and cuDNN versions are compatible with the chosen `onnxruntime-gpu` package.
+
+### Exporting a Model to ONNX
+
+To use ONNX, you first need to export a pre-trained MeloTTS model to the ONNX format. This is done using the `export_onnx.py` script.
+
+**Example Command:**
+
+```bash
+python export_onnx.py --language EN --output_path melo_en.onnx --device cpu
+```
+
+**Arguments:**
+-   `--language`: (Required) The language of the model to export (e.g., `EN`, `ZH`, `ES`). This determines which default pre-trained model is loaded for export if `--ckpt_path` is not specified.
+-   `--output_path`: (Optional) The path where the exported ONNX model will be saved. Defaults to `melo.onnx`.
+-   `--ckpt_path`: (Optional) Path to a specific PyTorch model checkpoint (`.pth` file). If not provided, the script will attempt to download the default pre-trained model for the specified language from HuggingFace.
+-   `--device`: (Optional) The device to use for loading the PyTorch model during export (e.g., `cpu`, `cuda`). Defaults to `cpu`. The exported ONNX model itself will be runnable on various devices supported by ONNX Runtime.
+
+### Running Inference with an ONNX Model
+
+Once you have an ONNX model file, you can use the `melo/infer.py` script with the `--use_onnx` flag to perform text-to-speech synthesis.
+
+**Example Command:**
+
+```bash
+python melo/infer.py --text "Hello world, this is a test using ONNX." --language EN --use_onnx --onnx_path melo_en.onnx --output_dir outputs_onnx
+```
+
+**Arguments:**
+-   `--use_onnx`: A flag to indicate that an ONNX model should be used for inference.
+-   `--onnx_path`: The path to your `.onnx` model file. Required if `--use_onnx` is specified. Defaults to `melo.onnx`.
+-   `--language`: The language of the model (must match the language the ONNX model was exported for).
+-   `--text`: The text you want to synthesize.
+-   `--output_dir`: The directory where the output audio file(s) will be saved.
+-   `--config_path`: (Optional) Path to the `config.json` for the model. If not provided, the script will attempt to load/download the default config for the specified language. This is important for `TTS_ONNX` to correctly load model hyperparameters (`hps`).
+
 ## Join the Community
 
 **Discord**
