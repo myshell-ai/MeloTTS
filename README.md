@@ -1,62 +1,123 @@
-<div align="center">
-  <div>&nbsp;</div>
-  <img src="logo.png" width="300"/> <br>
-  <a href="https://trendshift.io/repositories/8133" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8133" alt="myshell-ai%2FMeloTTS | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</div>
+# MeloTTS-API
 
-## Introduction
-MeloTTS is a **high-quality multi-lingual** text-to-speech library by [MIT](https://www.mit.edu/) and [MyShell.ai](https://myshell.ai). Supported languages include:
+A simple, robust, and OpenAI-compatible FastAPI wrapper for the [MyShell-AI/MeloTTS](https://github.com/myshell-ai/MeloTTS) text-to-speech engine.
 
-| Language | Example |
-| --- | --- |
-| English (American)    | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/en/EN-US/speed_1.0/sent_000.wav) |
-| English (British)     | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/en/EN-BR/speed_1.0/sent_000.wav) |
-| English (Indian)      | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/en/EN_INDIA/speed_1.0/sent_000.wav) |
-| English (Australian)  | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/en/EN-AU/speed_1.0/sent_000.wav) |
-| English (Default)     | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/en/EN-Default/speed_1.0/sent_000.wav) |
-| Spanish               | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/es/ES/speed_1.0/sent_000.wav) |
-| French                | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/fr/FR/speed_1.0/sent_000.wav) |
-| Chinese (mix EN)      | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/zh/ZH/speed_1.0/sent_008.wav) |
-| Japanese              | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/jp/JP/speed_1.0/sent_000.wav) |
-| Korean                | [Link](https://myshell-public-repo-host.s3.amazonaws.com/myshellttsbase/examples/kr/KR/speed_1.0/sent_000.wav) |
+This project provides an easy-to-use HTTP interface for MeloTTS, allowing you to integrate high-quality, natural-sounding text-to-speech into your applications with simple API calls. The API structure is designed to mimic common TTS services for easy integration.
 
-Some other features include:
-- The Chinese speaker supports `mixed Chinese and English`.
-- Fast enough for `CPU real-time inference`.
+## Features
 
-## Usage
-- [Use without Installation](docs/quick_use.md)
-- [Install and Use Locally](docs/install.md)
-- [Training on Custom Dataset](docs/training.md)
+-   **High-Quality TTS:** Leverages the power of MeloTTS for fast and natural-sounding speech synthesis.
+-   **OpenAI-Compatible Endpoint:** Includes a `/v1/audio/speech` endpoint that mirrors the structure of OpenAI's TTS API for drop-in compatibility with tools like Open WebUI.
+-   **RESTful Interface:** Provides clear endpoints to list available models and voices.
+-   **Reliable Installation:** A comprehensive `requirements.txt` file ensures a clean and complete installation in an isolated environment.
+-   **CPU Ready:** Configured to run on CPU out-of-the-box, no GPU required.
 
-The Python API and model cards can be found in [this repo](https://github.com/myshell-ai/MeloTTS/blob/main/docs/install.md#python-api) or on [HuggingFace](https://huggingface.co/myshell-ai).
+---
 
-**Contributing**
+## 🚀 Installation
 
-If you find this work useful, please consider contributing to this repo.
+For a reliable setup, please follow these steps exactly. This guide has been tested on Debian-based systems like Linux Mint 20 and Ubuntu 24.04.
 
-- Many thanks to [@fakerybakery](https://github.com/fakerybakery) for adding the Web UI and CLI part.
+### 📋 Step 1: System Prerequisites
 
-## Authors
+#### For a barebones system, you will need to install Git and Python's core tools first.
 
-- [Wenliang Zhao](https://wl-zhao.github.io) at Tsinghua University
-- [Xumin Yu](https://yuxumin.github.io) at Tsinghua University
-- [Zengyi Qin](https://www.qinzy.tech) (project lead) at MIT and MyShell
-
-**Citation**
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install git python3 python3-pip python3-venv -y
 ```
-@software{zhao2024melo,
-  author={Zhao, Wenliang and Yu, Xumin and Qin, Zengyi},
-  title = {MeloTTS: High-quality Multi-lingual Multi-accent Text-to-Speech},
-  url = {https://github.com/myshell-ai/MeloTTS},
-  year = {2023}
-}
+### 📦 Step 2: Clone This Repository
+
+
+git clone [https://github.com/highfillgoods/MeloTTS-API-Locally.git](https://github.com/highfillgoods/MeloTTS-API-Locally.git)
+cd MeloTTS-API-Locally
+🌿 Step 3: Create and Activate a Virtual Environment
+#### Using a dedicated environment helps prevent conflicts. Choose one of the following options.
+
+## Option A: Using conda
+
+conda create --name melo_api_env python=3.11 -y
+conda activate melo_api_env
+## Option B: Using venv (Standard Python)
+
+python3 -m venv venv
+source venv/bin/activate
+
+### 🐍 Step 4: Install Python Dependencies
+#### This single command installs all necessary Python packages from the perfected requirements.txt file.
+
+
+pip install -r requirements.txt
+### 🧠 Step 5: Download NLTK Language Models
+#### The text processor requires data packages from the NLTK library. This command downloads the necessary models.
+
+python3 -m nltk.downloader averaged_perceptron_tagger punkt
+# ▶️ Running the API Server
+#### Once the installation is complete, start the API server with Uvicorn.
+
+```bash
+uvicorn melotts_api:app --host 0.0.0.0 --port 8000
+```
+The server will start, load the MeloTTS model, and become available at http://0.0.0.0:8000.
+
+
+
+###  🔌 Connecting to Open WebUI
+This API is designed to work directly with Open WebUI.
+
+![Open WebUI Audio Settings](open-webui-settings.png)
+
+
+In Open WebUI, navigate to Settings > Audio.
+Configure the TTS Settings section with the following values:
+Text-to-Speech Engine: OpenAI
+OpenAI API Base URL: http://localhost:8000/v1
+OpenAI API Key: Can be set to anything (e.g., 12345).
+Your settings should look like this:
+
+### 🛠️ Direct API Usage (Advanced)
+You can also interact with the API directly using tools like curl.
+
+#### List Available Models
+curl http://localhost:8000/v1/models
+
+#### List Available Voices
+curl http://localhost:8000/v1/audio/voices
+Synthesize Speech
+
+#### Test audio Generation of voices
+```bash
+curl -X POST \
+  http://localhost:8000/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  --data '{
+    "input": "Hello, this is a test from the land down under.",
+    "voice": "EN-AU"
+  }' \
+  --output test_audio.mp3
 ```
 
-## License
+## Bonus: Running the Original MeloTTS WebUI
+These instructions are for running the original Gradio WebUI developed by MyShell-AI, which is separate from the FastAPI server above. It's recommended to do this in a different folder and a new, clean environment.
 
-This library is under MIT License, which means it is free for both commercial and non-commercial use.
+Clone the Original MeloTTS Repository
 
-## Acknowledgements
 
-This implementation is based on [TTS](https://github.com/coqui-ai/TTS), [VITS](https://github.com/jaywalnut310/vits), [VITS2](https://github.com/daniilrobnikov/vits2) and [Bert-VITS2](https://github.com/fishaudio/Bert-VITS2). We appreciate their awesome work.
+### Make sure you are in your home directory or outside your API project folder
+git clone [https://github.com/myshell-ai/MeloTTS.git](https://github.com/myshell-ai/MeloTTS.git)
+cd MeloTTS
+Create a Separate, Clean Environment (e.g., conda create --name melo_ui_env python=3.11 -y) and activate it.
+
+#### Install All WebUI Dependencies. Note: We do not use pip install melo.
+
+
+pip install torch torchvision torchaudio gradio librosa tqdm transformers cn2an pypinyin jieba eng_to_ipa inflect unidecode num2words pykakasi fugashi g2p_en anyascii jamo gruut cached_path unidic
+
+
+python3 -m nltk.downloader averaged_perceptron_tagger punkt
+python3 -m melo.app
+
+## Open in browser for Original MeloTTS WebUI
+http://localhost:7860
+
+
