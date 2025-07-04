@@ -28,8 +28,10 @@ def get_bert(norm_text, word2ph, language, device):
     from .spanish_bert import get_bert_feature as sp_bert
     from .french_bert import get_bert_feature as fr_bert
     from .korean import get_bert_feature as kr_bert
+    from .norwegian import get_bert_feature as no_bert # Import Norwegian BERT function
 
     lang_bert_func_map = {"ZH": zh_bert, "EN": en_bert, "JP": jp_bert, 'ZH_MIX_EN': zh_mix_en_bert, 
-                          'FR': fr_bert, 'SP': sp_bert, 'ES': sp_bert, "KR": kr_bert}
+                          'FR': fr_bert, 'SP': sp_bert, 'ES': sp_bert, "KR": kr_bert,
+                          "NO": no_bert} # Add Norwegian to map
     bert = lang_bert_func_map[language](norm_text, word2ph, device)
     return bert

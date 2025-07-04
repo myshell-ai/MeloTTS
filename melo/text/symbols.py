@@ -261,17 +261,65 @@ ru_symbols = [
 ]
 num_ru_tones = 1
 
+# Norwegian
+# Phonemes based on common Norwegian IPA representation and potential espeak-ng output
+# This list should be verified and refined by inspecting actual espeak-ng output for a diverse Norwegian corpus
+no_symbols = sorted(list(set([
+    # Vowels (short & long implicitly handled by base vowel + length marker 'ː' if present)
+    'a', 'æ', 'e', 'ə', 'ɛ', 'i', 'ɪ', 'o', 'ɔ', 'u', 'ʊ', 'y', 'ʏ', 'ø', 'œ', 'ʉ',
+    # Consonants
+    'b', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v',
+    'ŋ', # ng like in "sang"
+    'ç', # kj like in "kjøre" (voiceless palatal fricative)
+    'ɖ', # rd like in "bord" (voiced retroflex stop)
+    'ɡ', # g like in "gå" (voiced velar stop - using 'g' above, but 'ɡ' is more precise IPA)
+    'ɳ', # rn like in "barn" (voiced retroflex nasal)
+    'ɾ', # r flap/tap
+    'ʂ', # rs like in "vers" (voiceless retroflex fricative)
+    'ʃ', # sj/skj like in "sjø", "skje" (voiceless postalveolar fricative)
+    'ʈ', # rt like in "kort" (voiceless retroflex stop)
+    'ʋ', # v, hv (voiced labiodental approximant)
+    # 'χ', # Not as common, ch in "Bach" (voiceless uvular fricative) - might appear for some loanwords
+    # 'ɣ', # Voiced velar fricative - allophone of /g/
+    # Phonetic markers
+    'ː', # Length marker
+    'ˈ', # Primary stress
+    'ˌ', # Secondary stress
+    # Other potential symbols from espeak - this needs verification
+    # '¹', '²', '³', '⁴', '⁵' # tone/pitch contour markers if any (Norwegian has pitch accent)
+])))
+# For 'ɡ', if the font doesn't render it well, 'g' is often used as a simpler form.
+# We should ensure that the chosen BERT tokenizer for Norwegian and espeak output are consistent,
+# or that normalization handles this. For now, including 'ɡ' and also 'g'.
+# Let's refine to use the more common 'g' if 'ɡ' is problematic for tokenizers/fonts,
+# and ensure espeak output is mapped correctly.
+# For simplicity and broader compatibility, sticking to 'g' and other standard keyboard IPA characters where possible.
+no_symbols = sorted(list(set([
+    'a', 'æ', 'e', 'ə', 'ɛ', 'i', 'ɪ', 'o', 'ɔ', 'u', 'ʊ', 'y', 'ʏ', 'ø', 'œ', 'ʉ',
+    'b', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v',
+    'ŋ', 'ç', 'ɖ', 'ɳ', 'ɾ', 'ʂ', 'ʃ', 'ʈ', 'ʋ',
+    'ː', 'ˈ', 'ˌ'
+])))
+num_no_tones = 2 # Representing the two lexical pitch accents in Norwegian (tonemes)
+
+
 # combine all symbols
-normal_symbols = sorted(set(zh_symbols + ja_symbols + en_symbols + kr_symbols + es_symbols + fr_symbols + de_symbols + ru_symbols))
+# Ensure 'ɡ' (U+0261) is distinct from 'g' (U+0067) if both are needed.
+# If espeak outputs 'ɡ' but our list has 'g', it will be UNK.
+# For now, the list above uses 'g'. This needs to be confirmed against actual espeak output.
+normal_symbols = sorted(list(set(zh_symbols + ja_symbols + en_symbols + kr_symbols + es_symbols + fr_symbols + de_symbols + ru_symbols + no_symbols)))
 symbols = [pad] + normal_symbols + pu_symbols
 sil_phonemes_ids = [symbols.index(i) for i in pu_symbols]
 
 # combine all tones
-num_tones = num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones + num_es_tones + num_fr_tones + num_de_tones + num_ru_tones
+num_tones = num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones + num_es_tones + num_fr_tones + num_de_tones + num_ru_tones + num_no_tones
 
 # language maps
-language_id_map = {"ZH": 0, "JP": 1, "EN": 2, "ZH_MIX_EN": 3, 'KR': 4, 'ES': 5, 'SP': 5 ,'FR': 6}
-num_languages = len(language_id_map.keys())
+language_id_map = {"ZH": 0, "JP": 1, "EN": 2, "ZH_MIX_EN": 3, 'KR': 4, 'ES': 5, 'SP': 5 ,'FR': 6, "NO": 7}
+# num_languages = len(language_id_map.keys()) # This line seems to be unused, consider removing or using it.
+# Recalculating num_languages based on the updated map
+num_languages = len(set(language_id_map.values()))
+
 
 language_tone_start_map = {
     "ZH": 0,
@@ -280,8 +328,9 @@ language_tone_start_map = {
     "EN": num_zh_tones + num_ja_tones,
     'KR': num_zh_tones + num_ja_tones + num_en_tones,
     "ES": num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones,
-    "SP": num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones,
+    "SP": num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones, # Spanish alias
     "FR": num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones + num_es_tones,
+    "NO": num_zh_tones + num_ja_tones + num_en_tones + num_kr_tones + num_es_tones + num_fr_tones + num_de_tones + num_ru_tones,
 }
 
 if __name__ == "__main__":

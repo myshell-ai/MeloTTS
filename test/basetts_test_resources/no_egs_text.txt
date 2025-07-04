@@ -1,0 +1,8 @@
+Dette er en enkel testsetning på norsk.
+Hvordan går det med æ, ø, og å?
+Jeg liker å spise blåbærsyltetøy!
+123 testes også.
+En setning til for å ha litt variasjon.
+Flyndre og andre ord med tonelag.
+Kan vi håndtere forkortelser som f.eks. eller osv.?
+Dette er en veldig lang setning for å teste hvordan systemet håndterer lengre inputsekvenser, og for å se om det er noen uventede problemer som oppstår med tegnsetting eller spesielle ordkombinasjoner.
