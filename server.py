@@ -102,15 +102,6 @@ async def get_audio(audio_id: str):
         filename = f"speech_{audio_id}.wav"
     )
 
-@app.get("/health")
-async def health_check(): 
-
-    return {
-        "status": "healthy",
-        "loaded_languages": list(models.keys()),
-        "version": "1.0.0"
-    }
-
 @app.delete("/audio/{audio_id}")
 async def cleanup_audio(audio_id: str):
 
@@ -122,6 +113,15 @@ async def cleanup_audio(audio_id: str):
         except:
             logger.error(f"Failed to delete audio file {audio_id}: {e}")
     raise HTTPException(status_code=404, detail="Audio file not found")
+
+@app.get("/health")
+async def health_check(): 
+
+    return {
+        "status": "healthy",
+        "loaded_languages": list(models.keys()),
+        "version": "1.0.0"
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8888)
