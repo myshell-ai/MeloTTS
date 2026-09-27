@@ -29,7 +29,8 @@ def split_sentences_zh(text, min_len=10):
     # 将文本中的换行符、空格和制表符替换为空格
     text = re.sub('[\n\t ]+', ' ', text)
     # 在标点符号后添加一个空格
-    text = re.sub('([,.!?;])', r'\1 $#!', text)
+    # A digit after the mark is a decimal or a thousands separator.
+    text = re.sub(r'([,.!?;])(?!\d)', r'\1 $#!', text)
     # 分隔句子并去除前后空格
     # sentences = [s.strip() for s in re.split('(。|！|？|；)', text)]
     sentences = [s.strip() for s in text.split('$#!')]
@@ -107,7 +108,8 @@ def txtsplit(text, desired_length=100, max_length=200):
     text = re.sub(r'\n\n+', '\n', text)
     text = re.sub(r'\s+', ' ', text)
     text = re.sub(r'[""]', '"', text)
-    text = re.sub(r'([,.?!])', r'\1 ', text)
+    # A digit after the mark is a decimal or a thousands separator.
+    text = re.sub(r'([,.?!])(?!\d)', r'\1 ', text)
     text = re.sub(r'\s+', ' ', text)
     
     rv = []
